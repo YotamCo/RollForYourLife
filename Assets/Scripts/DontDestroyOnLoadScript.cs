@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class DontDestroyOnLoadScript : MonoBehaviour
 {
-    public static DontDestroyOnLoadScript instance;
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-            Destroy(gameObject);
-    }
-
     // Start is called before the first frame update
     void Start()
     {
+        for(int i = 0; i < Object.FindObjectsOfType<DontDestroyOnLoadScript>().Length; i++)
+        {
+            if(Object.FindObjectsOfType<DontDestroyOnLoadScript>()[i] != this)
+            {
+                if(Object.FindObjectsOfType<DontDestroyOnLoadScript>()[i].name == gameObject.name)
+                {
+                    Destroy(gameObject);
+                }
+            }
+        }
         
+        DontDestroyOnLoad(gameObject);
     }
 
     // Update is called once per frame

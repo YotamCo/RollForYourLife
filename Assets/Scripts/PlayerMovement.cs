@@ -17,12 +17,17 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MovePlayer();
+        MovePlayer(); //TODO: put it in a if player pressed on a movement button
+    }
+
+    public Vector3 getPlayerPosition()
+    {
+        return gameObject.transform.position;
     }
 
     void MovePlayer()
     {
-        Vector3 wantedPosition = transform.position;
+        Vector3 wantedPosition = gameObject.transform.position;
         
         if (Input.GetKeyDown("up"))
         {
@@ -47,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
 
         transform.eulerAngles = playerDircetion;
 
-        if(mapManagerScript.IsWantedPositionLegal(wantedPosition))
+        if(mapManagerScript.IsWantedPositionOutOfBoundsOrWall(wantedPosition))
         {
             
             transform.position = wantedPosition;

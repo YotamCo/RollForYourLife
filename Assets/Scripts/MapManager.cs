@@ -9,21 +9,41 @@ public class MapManager : MonoBehaviour
     [SerializeField] private Tile tilePrefab; 
     [SerializeField] private GameObject wallPrefab;
 
-    private (int, int) _topLeft = (-6, 3);
-    private (int, int) _topRight = (6, 3);
-    private (int, int) _bottomLeft = (-6, -4);
-    private (int, int) _bottomRight = (6, -4);
+    private int _leftX = -6;
+    private int _rightX = 6;
+    private int _bottomY = -4;
+    private int _topY = 3;
 
     private int [,] _wallLocations; // has 1 where there are walls
+
+    private GameObject _player;
+    private PlayerMovement _playerMovementScript;
+    private DieSpawner _dieSpawnerScript;
+    private EnemySpawner _enemySpawnerScript;
 
     // start is called before the first frame update
     void Start()
     {
         _wallLocations = new int[13, 8];
+
+        _player                 = GameObject.Find("Player");
+        _playerMovementScript   = _player.GetComponent<PlayerMovement>();
+        _dieSpawnerScript       = gameObject.GetComponent<DieSpawner>();
+        _enemySpawnerScript     = gameObject.GetComponent<EnemySpawner>();
     }
 
     void Update()
     {
+    }
+
+    public (int, int) getXMapBounds()
+    {
+        return (_leftX, _rightX);
+    }
+
+    public (int, int) getYMapBounds()
+    {
+        return (_bottomY, _topY);
     }
 
     public void PrepareNewLevelObstacles(int level)
@@ -37,13 +57,13 @@ public class MapManager : MonoBehaviour
 
     void SpawnObstaclesFromText(string readText)
     {
-        (int x, int y) = _topLeft;
+        (int x, int y) = (_leftX, _topY);
         float tileSize = tilePrefab.transform.localScale.x; // it's a square so x = y
         foreach(char c in readText) // can be '0', '1', '\n', ' '
         {
             if(c == '\n')
             {
-                x = _topLeft.Item1;
+                x = _leftX;
                 y--;
                 continue;
             }
@@ -73,30 +93,78 @@ public class MapManager : MonoBehaviour
     {
         int numOfSubLevels = (Directory.GetFiles(subLevelsLocation, "*", SearchOption.TopDirectoryOnly).Length) / 2;
         int subLevel = Random.Range(1, numOfSubLevels + 1);
-        Debug.Log("numOfSubLevels: " + numOfSubLevels + "   Level loaded is " + level.ToString() + "_" + subLevel.ToString());
         return subLevel;
     }
 
-    bool IsInMapBounds(Vector3 position)
-    {
-        if(position.x < _topLeft.Item1 || position.x > _topRight.Item1 
-        || position.y < _bottomLeft.Item2 || position.y > _topLeft.Item2)
-            return false;
-        return true;
-    }
-
-    public bool IsWantedPositionLegal(Vector3 position)
+    public bool IsWantedPositionOutOfBoundsOrWall(Vector3 position)
     {
         if(IsInMapBounds(position) && !DoesPositionHasWall(position))
             return true;
         return false;
     }
 
+    public bool IsWantedPositionLegal(Vector3 position)
+    {
+        if(IsInMapBounds(position) 
+            && !DoesPositionHasWall(position)
+            && !IsSameAsPlayerPosition(position)
+            && !IsSameAsEnemiesPosition(position)
+            && !IsSameAsDicePosition(position)
+            && !IsSameAsWeaponsPosition(position))
+            return true;
+        return false;
+    }
+
+    bool IsInMapBounds(Vector3 position)
+    {
+        if(position.x < _leftX || position.x > _rightX
+            || position.y < _bottomY || position.y > _topY)
+            return false;
+        return true;
+    }
+
     bool DoesPositionHasWall(Vector3 position)
     {
         (int wallLocationsX, int wallLocationsY) = ParseLocationToWallLocations((int)position.x, (int)position.y);
         if(_wallLocations[wallLocationsX, wallLocationsY] == 1)
+        {
             return true;
+        }
+        return false;
+    }
+
+    private bool IsSameAsPlayerPosition(Vector3 pos)
+    {
+        Vector3 playerPosition = _playerMovementScript.getPlayerPosition();
+        if(playerPosition.x == pos.x && playerPosition.y == pos.y)
+            return true;
+        return false;
+    }
+
+    private bool IsSameAsEnemiesPosition(Vector3 pos)
+    {
+        List<GameObject> enemiesInMap = _enemySpawnerScript.GetPrefabsOnMap();
+        foreach(GameObject enemy in enemiesInMap)
+        {
+            if(enemy.transform.position.x == pos.x && enemy.transform.position.y == pos.y)
+                return true;
+        }
+        return false;
+    }
+
+    private bool IsSameAsWeaponsPosition(Vector3 pos)
+    {
+        return false; //TODO: Need to implement
+    }
+
+    private bool IsSameAsDicePosition(Vector3 pos)
+    {
+        List<GameObject> diceInMap = _dieSpawnerScript.GetPrefabsOnMap();
+        foreach(GameObject die in diceInMap)
+        {
+            if(die.transform.position.x == pos.x && die.transform.position.y == pos.y)
+                return true;
+        }
         return false;
     }
 
@@ -104,4 +172,6 @@ public class MapManager : MonoBehaviour
     {
         return (x + 6, y + 4);
     }
+
+
 }

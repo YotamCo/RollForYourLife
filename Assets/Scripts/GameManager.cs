@@ -7,13 +7,16 @@ public class GameManager : MonoBehaviour
     MapManager mapManagerScript;
     LevelManager levelManagerScript;
 
+    public delegate void OnCleanupBeforeLevelUp();
+    public static OnCleanupBeforeLevelUp onCleanupBeforeLevelUp;
+
     // Start is called before the first frame update
     void Start()
     {
         mapManagerScript = gameObject.GetComponent<MapManager>();
         levelManagerScript = gameObject.GetComponent<LevelManager>();
 
-        DiceManager.onRollingSufficientScore += PassedCurrentLevel;
+        DiceRollManager.onRollingSufficientScore += PassedCurrentLevel;
 
         FirstGameInitialization();
     }
@@ -26,6 +29,7 @@ public class GameManager : MonoBehaviour
 
     void PassedCurrentLevel()
     {
+        onCleanupBeforeLevelUp?.Invoke();
         levelManagerScript.LevelUp();
         StartCoroutine(DelayCoroutine());
         //mapGeneratorScript.PrepareNewLevelObstacles(levelManagerScript.GetCurrentLevel());
@@ -39,7 +43,6 @@ public class GameManager : MonoBehaviour
 
     IEnumerator DelayCoroutine()
     {
-        Debug.Log("Here");
         yield return new WaitForSeconds(0.5f);
         mapManagerScript.PrepareNewLevelObstacles(levelManagerScript.GetCurrentLevel());
     }
