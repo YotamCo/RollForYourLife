@@ -4,14 +4,33 @@ using UnityEngine;
 
 public class EnemySpawner : AbstractSpawnManager
 {
-    [SerializeField] float _timeBetweenSpawns = 5f;
+    [SerializeField] private float _timeBetweenSpawns = 5f;
+    [SerializeField] private float[] _spawningProbabilityBetweenMonsters; //Has to sum up to 1
+
+    public delegate void OnEnemyDeathUpdateUI();
+    public static OnEnemyDeathUpdateUI onEnemyDeathUpdateUI;
+
+    private int _totalEnemiesKilled = 0;
     
     private float _lastSpawnTime = 0;
     
 
+    public int GetTotalNumOfEnemiesKilled()
+    {
+        return _totalEnemiesKilled;
+    }
+
     protected override void SpecificInitializations()
     {
-        
+        EnemyController.onEnemyDeath += EnemyDied;
+    }
+
+    private void EnemyDied(GameObject enemy)
+    {
+        _totalEnemiesKilled++;
+        RemoveFromPrefabsOnMap(enemy);
+        Destroy(enemy);
+        onEnemyDeathUpdateUI?.Invoke();
     }
 
     protected override bool SpecificShouldSpawnPrefab()
@@ -28,12 +47,28 @@ public class EnemySpawner : AbstractSpawnManager
     {
         GameObject enemy = Instantiate(prefabsToSpawn[ChooseWhichToSpawn()],
                                          spawningPosition, Quaternion.identity);
-        addToPrefabsOnMap(enemy);
+        AddToPrefabsOnMap(enemy);
     }
 
     protected override int ChooseWhichToSpawn()
     {
-        int randIndex = Random.Range(0, prefabsToSpawn.Length);  //TODO: add a smarter way of choosing enemies
-        return randIndex;
+        float rand = (float)Random.Range(0, 101) / 100;
+        return IndexFactoryForSpawningMonster(rand);
+    }
+
+    private int IndexFactoryForSpawningMonster(float rand)
+    {
+        float fromValue = 0;
+        float untilValue = 0;
+        for(int i = 0; i < _spawningProbabilityBetweenMonsters.Length; i++)
+        {
+            untilValue += _spawningProbabilityBetweenMonsters[i];
+            if(rand >= fromValue && rand < untilValue)
+            {
+                return i;
+            }
+            fromValue += _spawningProbabilityBetweenMonsters[i];
+        }
+        return _spawningProbabilityBetweenMonsters.Length - 1;
     }
 }

@@ -901,7 +901,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 140678235}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3a83dcbe3d74f848efe105c891225d, type: 3}
   m_Name: 
@@ -925,7 +925,10 @@ MonoBehaviour:
   prefabsToSpawn:
   - {fileID: 8217956821321754459, guid: 5ebd448aea96548499018f7b22616d4c, type: 3}
   - {fileID: 6797571292058802859, guid: 73683f8687cb9474b91f70d7b905076f, type: 3}
-  _timeBetweenSpawns: 5
+  _timeBetweenSpawns: 1.5
+  _spawningProbabilityBetweenMonsters:
+  - 0.3
+  - 0.7
 --- !u!1 &174137537
 GameObject:
   m_ObjectHideFlags: 0
@@ -5841,7 +5844,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1294333549}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 696cc4713dd6f4398a2722e5539a641b, type: 3}
   m_Name: 

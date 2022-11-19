@@ -22,8 +22,8 @@ public abstract class AbstractSpawnManager : MonoBehaviour
         GameManager.onCleanupBeforeLevelUp += ClearPrefabsOnMap;
         prefabsOnMap = new List<GameObject>();
 
-        (_leftX, _rightX) = getXMapBounds();
-        (_bottomY, _topY) = getYMapBounds();
+        (_leftX, _rightX) = GetXMapBounds();
+        (_bottomY, _topY) = GetYMapBounds();
 
         SpecificInitializations();
     }
@@ -42,14 +42,14 @@ public abstract class AbstractSpawnManager : MonoBehaviour
         }
     }
 
-    protected void addToPrefabsOnMap(GameObject spawnedPrefab)
+    protected void AddToPrefabsOnMap(GameObject spawnedPrefab)
     {
         prefabsOnMap.Add(spawnedPrefab);
     }
 
-    protected void removeFromPrefabsOnMap(GameObject removedPrefab)
+    protected void RemoveFromPrefabsOnMap(GameObject removedPrefab)
     {
-        prefabsOnMap.Remove(removedPrefab);  //TODO: will be used when implementing enemy dying and picking up die/weapon 
+        prefabsOnMap.Remove(removedPrefab);
     }
 
     public List<GameObject> GetPrefabsOnMap()
@@ -57,12 +57,12 @@ public abstract class AbstractSpawnManager : MonoBehaviour
         return prefabsOnMap;
     }
 
-    protected (int, int) getXMapBounds()
+    protected (int, int) GetXMapBounds()
     {
         return _mapManagerScript.getXMapBounds();
     }
 
-    protected (int, int) getYMapBounds()
+    protected (int, int) GetYMapBounds()
     {
         return _mapManagerScript.getYMapBounds();
     }
@@ -78,7 +78,6 @@ public abstract class AbstractSpawnManager : MonoBehaviour
         int yPos = Random.Range(_bottomY, _topY + 1);
         return new Vector3(xPos, yPos, 0);
     }
-
 
     protected bool ShouldSpawnPrefab()
     {

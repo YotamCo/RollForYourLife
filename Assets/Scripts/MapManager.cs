@@ -122,7 +122,6 @@ public class MapManager : MonoBehaviour
             return false;
         return true;
     }
-
     bool DoesPositionHasWall(Vector3 position)
     {
         (int wallLocationsX, int wallLocationsY) = ParseLocationToWallLocations((int)position.x, (int)position.y);
@@ -135,6 +134,11 @@ public class MapManager : MonoBehaviour
 
     private bool IsSameAsPlayerPosition(Vector3 pos)
     {
+        if(_playerMovementScript.enabled == false)
+        {
+            Debug.LogWarning("PlayerMovement script is disabled");
+            return false;
+        }
         Vector3 playerPosition = _playerMovementScript.getPlayerPosition();
         if(playerPosition.x == pos.x && playerPosition.y == pos.y)
             return true;
@@ -143,6 +147,11 @@ public class MapManager : MonoBehaviour
 
     private bool IsSameAsEnemiesPosition(Vector3 pos)
     {
+        if(_enemySpawnerScript.enabled == false)
+        {
+            Debug.LogWarning("EnemySpawner script is disabled");
+            return false;
+        }
         List<GameObject> enemiesInMap = _enemySpawnerScript.GetPrefabsOnMap();
         foreach(GameObject enemy in enemiesInMap)
         {
@@ -159,6 +168,11 @@ public class MapManager : MonoBehaviour
 
     private bool IsSameAsDicePosition(Vector3 pos)
     {
+        if(_dieSpawnerScript.enabled == false)
+        {
+            Debug.LogWarning("DieSpawner script is disabled");
+            return false;
+        }
         List<GameObject> diceInMap = _dieSpawnerScript.GetPrefabsOnMap();
         foreach(GameObject die in diceInMap)
         {

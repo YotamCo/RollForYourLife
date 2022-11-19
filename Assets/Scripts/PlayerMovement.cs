@@ -17,7 +17,10 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MovePlayer(); //TODO: put it in a if player pressed on a movement button
+        if(Input.anyKey)
+        {
+            MovePlayer();
+        }
     }
 
     public Vector3 getPlayerPosition()

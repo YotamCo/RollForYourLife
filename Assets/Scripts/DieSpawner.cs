@@ -40,7 +40,7 @@ public class DieSpawner : AbstractSpawnManager
     {
         GameObject die = Instantiate(prefabsToSpawn[ChooseWhichToSpawn()],
                                      spawningPosition, Quaternion.identity);
-        addToPrefabsOnMap(die);
+        AddToPrefabsOnMap(die);
     }
 
     protected override int ChooseWhichToSpawn()
@@ -50,7 +50,7 @@ public class DieSpawner : AbstractSpawnManager
 
    private void DiePickedUp(GameObject dieObject)
    {
-        removeFromPrefabsOnMap(dieObject);
+        RemoveFromPrefabsOnMap(dieObject);
         Destroy(dieObject);    
    }
 }

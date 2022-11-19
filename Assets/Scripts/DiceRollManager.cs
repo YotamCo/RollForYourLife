@@ -8,8 +8,14 @@ public class DiceRollManager : MonoBehaviour
     public delegate void OnRollingSufficientScore();
     public static OnRollingSufficientScore onRollingSufficientScore;
 
+    public delegate void OnDieRoll(int dieScore, int dieIndex);
+    public static OnDieRoll onDieRoll;
+
     private int[] _dieRollScore;
     private int _totalNumOfRolls = 0;
+
+    [SerializeField] private int minimumScoreNeededForLevelUp = 10;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,21 +31,15 @@ public class DiceRollManager : MonoBehaviour
             TriggerEventBasedOnScore(_dieRollScore[0] + _dieRollScore[1]);
             _dieRollScore[1] = -1;
         }
-
-        /*if (Input.GetKeyDown("space"))
-        {
-            Debug.Log("KeyDown");
-            PassToNextLevel();
-        }*/
     }
 
     private void TriggerEventBasedOnScore(int totalDiceScore)
     {
-        if(totalDiceScore > 2 && totalDiceScore <= 5)
+        if(totalDiceScore >= 2 && totalDiceScore < minimumScoreNeededForLevelUp)
         {
 
         }
-        else if(totalDiceScore > 5 && totalDiceScore <= 12)
+        else if(totalDiceScore >= minimumScoreNeededForLevelUp && totalDiceScore <= 12)
         {
             onRollingSufficientScore?.Invoke();
         }
@@ -60,6 +60,7 @@ public class DiceRollManager : MonoBehaviour
     {
         int randScore = Random.Range(1, 7); //TODO: Make a better roll using function of number of enemies killed
         Debug.Log("Die Roll Score = " + randScore);
+        onDieRoll?.Invoke(randScore, _totalNumOfRolls % 2);
         _dieRollScore[_totalNumOfRolls % 2] = randScore;
         _totalNumOfRolls++;
     }
