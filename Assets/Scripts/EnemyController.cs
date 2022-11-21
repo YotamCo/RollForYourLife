@@ -4,8 +4,7 @@ using UnityEngine;
 
 public abstract class EnemyController : MonoBehaviour
 {
-    [SerializeField] protected float _damage = 1;
-    [SerializeField] protected float _movementEverySecs;
+    [SerializeField] protected float movementEverySecs;
 
     public delegate void OnEnemyDeath(GameObject enemy);
     public static OnEnemyDeath onEnemyDeath;
@@ -13,6 +12,7 @@ public abstract class EnemyController : MonoBehaviour
     protected MapManager mapManagerScript;
     protected int numOfPossibleMovingDirections = 4;
     protected Vector3[] possibleDirections;
+    protected float lastTimeMoved = 0f;
 
     // Start is called before the first frame update
     void Start()

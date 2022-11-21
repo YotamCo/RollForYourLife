@@ -6,8 +6,8 @@ public class PlayerMovement : MonoBehaviour
 {
     GameObject gameManager;
     MapManager mapManagerScript;
-    // Start is called before the first frame update
     Vector3 playerDircetion = Vector3.forward * 0;
+    
     void Start()
     {
         gameManager = GameObject.Find("GameManager");
@@ -21,11 +21,6 @@ public class PlayerMovement : MonoBehaviour
         {
             MovePlayer();
         }
-    }
-
-    public Vector3 getPlayerPosition()
-    {
-        return gameObject.transform.position;
     }
 
     void MovePlayer()

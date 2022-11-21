@@ -1161,8 +1161,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabsToSpawn:
   - {fileID: 769463293114510570, guid: 3f684320b6a0349bc881fba1c14a7ed5, type: 3}
-  _timeBetweenPossibleSpawns: 10
-  _spawningProbability: 0.5
+  _timeBetweenPossibleSpawns: 5
+  _spawningProbability: 0.8
 --- !u!114 &140678243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1179,11 +1179,9 @@ MonoBehaviour:
   - {fileID: 8217956821321754459, guid: 5ebd448aea96548499018f7b22616d4c, type: 3}
   - {fileID: 6797571292058802859, guid: 73683f8687cb9474b91f70d7b905076f, type: 3}
   - {fileID: 475764536295449681, guid: e93b3362a925d4796a982f963d8bd093, type: 3}
-  _timeBetweenSpawns: 5
+  _timeBetweenSpawns: 4
   _spawningProbabilityBetweenMonsters:
   - 1
-  - 0
-  - 0
   - 0
   - 0
 --- !u!114 &140678244
@@ -1198,7 +1196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40e65691e74dc4f8e8f6ff78a6de3151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minimumScoreNeededForLevelUp: 10
+  minimumScoreNeededForLevelUp: 8
 --- !u!1 &174137537
 GameObject:
   m_ObjectHideFlags: 0

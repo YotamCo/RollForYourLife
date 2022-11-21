@@ -27,7 +27,6 @@ public class MapManager : MonoBehaviour
         _wallLocations = new int[13, 8];
 
         _player                 = GameObject.Find("Player");
-        _playerMovementScript   = _player.GetComponent<PlayerMovement>();
         _dieSpawnerScript       = gameObject.GetComponent<DieSpawner>();
         _enemySpawnerScript     = gameObject.GetComponent<EnemySpawner>();
     }
@@ -134,12 +133,12 @@ public class MapManager : MonoBehaviour
 
     private bool IsSameAsPlayerPosition(Vector3 pos)
     {
-        if(_playerMovementScript.enabled == false)
+        if(_player == null) //TODO: !! Check how to check if a script is null or inactive
         {
-            Debug.LogWarning("PlayerMovement script is disabled");
+            Debug.LogWarning("Player object does not exist");
             return false;
         }
-        Vector3 playerPosition = _playerMovementScript.getPlayerPosition();
+        Vector3 playerPosition = _player.transform.position;
         if(playerPosition.x == pos.x && playerPosition.y == pos.y)
             return true;
         return false;
