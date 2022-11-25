@@ -68,7 +68,7 @@ public class PlayerMovementSmooth : MonoBehaviour
                 playerDircetion = Vector3.forward * 180;
             }
 
-            if(!mapManagerScript.IsWantedPositionLegal(wantedPosition))
+            if(!mapManagerScript.IsMovementPositionLegal(wantedPosition))
             {
                 wantedPosition = transform.position;
             }

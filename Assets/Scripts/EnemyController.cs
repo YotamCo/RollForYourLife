@@ -14,7 +14,6 @@ public abstract class EnemyController : MonoBehaviour
     protected Vector3[] possibleDirections;
     protected float lastTimeMoved = 0f;
 
-    //TODO: add a maximum amount of enemies on map
 
     // Start is called before the first frame update
     void Start()

@@ -26,7 +26,7 @@ public class BlindEnemyController : EnemyController
             int randDirection = Random.Range(0, numOfPossibleMovingDirections);
             Vector3 possibleNextPosition = transform.position + possibleDirections[randDirection];
 
-            if(mapManagerScript.IsWantedPositionLegal(possibleNextPosition))
+            if(mapManagerScript.IsMovementPositionLegal(possibleNextPosition))
             {
                 _blindNextPosition = possibleNextPosition;
                 lastTimeMoved = Time.time;

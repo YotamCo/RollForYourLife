@@ -6,6 +6,9 @@ public class EnemySpawner : AbstractSpawnManager
 {
     [SerializeField] private float _timeBetweenSpawns = 5f;
     [SerializeField] private float[] _spawningProbabilityBetweenMonsters; //Has to sum up to 1
+    [SerializeField] private int _maxNumOfEnemiesOnMap = 5;
+
+    private int _numOfEnemiesOnMap = 0;
 
     public delegate void OnEnemyDeathUpdateUI();
     public static OnEnemyDeathUpdateUI onEnemyDeathUpdateUI;
@@ -27,6 +30,7 @@ public class EnemySpawner : AbstractSpawnManager
 
     private void EnemyDied(GameObject enemy)
     {
+        _numOfEnemiesOnMap--;
         _totalEnemiesKilled++;
         RemoveFromPrefabsOnMap(enemy);
         Destroy(enemy);
@@ -35,7 +39,7 @@ public class EnemySpawner : AbstractSpawnManager
 
     protected override bool SpecificShouldSpawnPrefab()
     {
-        if(Time.time - _lastSpawnTime > _timeBetweenSpawns)
+        if((Time.time - _lastSpawnTime > _timeBetweenSpawns) && (_numOfEnemiesOnMap < _maxNumOfEnemiesOnMap))
         {
             _lastSpawnTime = Time.time;
             return true;
@@ -48,6 +52,7 @@ public class EnemySpawner : AbstractSpawnManager
         GameObject enemy = Instantiate(prefabsToSpawn[ChooseWhichToSpawn()],
                                          spawningPosition, Quaternion.identity);
         AddToPrefabsOnMap(enemy);
+        _numOfEnemiesOnMap++;
     }
 
     protected override int ChooseWhichToSpawn()

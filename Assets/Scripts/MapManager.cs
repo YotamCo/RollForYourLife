@@ -102,11 +102,22 @@ public class MapManager : MonoBehaviour
         return false;
     }
 
-    public bool IsWantedPositionLegal(Vector3 position)
+    public bool IsSpawningPositionLegal(Vector3 position)
     {
         if(IsInMapBounds(position) 
             && !DoesPositionHasWall(position)
             && !IsSameAsPlayerPosition(position)
+            && !IsSameAsEnemiesPosition(position)
+            && !IsSameAsDicePosition(position)
+            && !IsSameAsWeaponsPosition(position))
+            return true;
+        return false;
+    }
+
+    public bool IsMovementPositionLegal(Vector3 position)
+    {
+        if(IsInMapBounds(position) 
+            && !DoesPositionHasWall(position)
             && !IsSameAsEnemiesPosition(position)
             && !IsSameAsDicePosition(position)
             && !IsSameAsWeaponsPosition(position))

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    private int currentLevel = 1;
+    private int _currentLevel = 1;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,12 +18,12 @@ public class LevelManager : MonoBehaviour
 
     public int GetCurrentLevel()
     {
-        return currentLevel;
+        return _currentLevel;
     }
 
     public void LevelUp()
     {
-        currentLevel++;
+        _currentLevel++;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

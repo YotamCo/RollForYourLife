@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ChasingEnemyController : BlindEnemyController
 {
+    [SerializeField] float _timeUntilDefinedAsStuck = 1f;
 
-    private List<Vector3> currentPossibleMovements; //TODO: need to remember to clean list after choosing a direction
+    private List<Vector3> currentPossibleMovements;
     private GameObject _player;
     
     private Vector3 _chasingNextPosition;
@@ -24,8 +25,7 @@ public class ChasingEnemyController : BlindEnemyController
 
     protected override void Move()
     {
-        if(_player != null) //TODO: !! Check how to check if a script is null or inactive
-        //TODO: doesn't work well. Need to debug!
+        if(_player != null) //TODO: Can add here an invisibility option. If player is invisible then MoveRandomly()
         {
             MoveChasingPlayer();
         }
@@ -43,13 +43,46 @@ public class ChasingEnemyController : BlindEnemyController
         }
     }
 
-    private void MoveChasingPlayer() //TODO: check if I can add a random movement in case an enemy is stuck
+    private void MoveChasingPlayer()
     {
         if(Time.time - lastTimeMoved > movementEverySecs)
         {
             Vector3 playerPosition = _player.transform.position;
+            AddCurrentPossibleMovements(playerPosition);
             
-            if(playerPosition.x - transform.position.x > 0)
+            Vector3 possibleNextPosition = transform.position;
+            bool enemyIsInPlayerPosition = currentPossibleMovements.Count == 0;
+
+            if(!enemyIsInPlayerPosition)
+            {
+                int randDirection = Random.Range(0, currentPossibleMovements.Count);
+                possibleNextPosition += currentPossibleMovements[randDirection];
+            }
+            
+            bool hasntMovedBecauseStucked = Time.time - lastTimeMoved > (movementEverySecs + _timeUntilDefinedAsStuck);
+            if(hasntMovedBecauseStucked)
+            {
+                int randDirection2 = Random.Range(0, possibleDirections.Length);
+                possibleNextPosition = transform.position + possibleDirections[randDirection2];
+            }
+
+            if(mapManagerScript.IsMovementPositionLegal(possibleNextPosition))
+            {
+                _chasingNextPosition = possibleNextPosition;
+                lastTimeMoved = Time.time;
+            }
+            currentPossibleMovements.Clear();
+        }
+
+        if(transform.position != _chasingNextPosition)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _chasingNextPosition, movingSpeed * Time.deltaTime);
+        }
+    }
+
+    private void AddCurrentPossibleMovements(Vector3 playerPosition)
+    {
+        if(playerPosition.x - transform.position.x > 0)
             {
                 currentPossibleMovements.Add(possibleDirections[0]);
             }
@@ -66,32 +99,10 @@ public class ChasingEnemyController : BlindEnemyController
             {
                 currentPossibleMovements.Add(possibleDirections[3]);
             }
-            
-            int randDirection = Random.Range(0, currentPossibleMovements.Count);
-            Vector3 possibleNextPosition = transform.position + currentPossibleMovements[randDirection];
-
-            if(Time.time - lastTimeMoved > (movementEverySecs + 1)) //TODO: change to a better planned variable
-            {
-                int randDirection2 = Random.Range(0, possibleDirections.Length);
-                possibleNextPosition = transform.position + possibleDirections[randDirection2];
-            }
-
-            if(mapManagerScript.IsWantedPositionLegal(possibleNextPosition))
-            {
-                _chasingNextPosition = possibleNextPosition;
-                lastTimeMoved = Time.time;
-            }
-            currentPossibleMovements.Clear();
-        }
-
-        if(transform.position != _chasingNextPosition)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, _chasingNextPosition, movingSpeed * Time.deltaTime);
-        }
     }
 
     protected override void SpecificEnemyDeathEffect()
     {
-        throw new System.NotImplementedException();
+        return; //TODO: implement later
     }
 }

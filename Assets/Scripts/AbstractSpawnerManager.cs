@@ -69,7 +69,7 @@ public abstract class AbstractSpawnManager : MonoBehaviour
 
     protected bool IsSpawningPositionLegal(Vector3 pos)
     {
-        return _mapManagerScript.IsWantedPositionLegal(pos);
+        return _mapManagerScript.IsSpawningPositionLegal(pos);
     }
 
     protected Vector3 ChooseSpawningPosition()
