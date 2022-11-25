@@ -91,7 +91,6 @@ public abstract class AbstractSpawnManager : MonoBehaviour
 
     protected void ClearPrefabsOnMap()
     {
-        Debug.Log("destroying the prefabs");
         for(int i = prefabsOnMap.Count - 1; i >= 0; i--)
         {
             GameObject prefabToDestroy = prefabsOnMap[i];

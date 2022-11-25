@@ -18,7 +18,7 @@ public class ChasingEnemyController : BlindEnemyController
     protected override void SpecificInitializations()
     {
         currentPossibleMovements = new List<Vector3>();
-        _player = GameObject.Find("GameManager");
+        _player = GameObject.Find("Player");
         _chasingNextPosition = transform.position;
     }
 
@@ -43,7 +43,7 @@ public class ChasingEnemyController : BlindEnemyController
         }
     }
 
-    private void MoveChasingPlayer()
+    private void MoveChasingPlayer() //TODO: check if I can add a random movement in case an enemy is stuck
     {
         if(Time.time - lastTimeMoved > movementEverySecs)
         {
@@ -53,7 +53,7 @@ public class ChasingEnemyController : BlindEnemyController
             {
                 currentPossibleMovements.Add(possibleDirections[0]);
             }
-            else
+            else if(playerPosition.x - transform.position.x < 0)
             {
                 currentPossibleMovements.Add(possibleDirections[1]);
             }
@@ -62,7 +62,7 @@ public class ChasingEnemyController : BlindEnemyController
             {
                 currentPossibleMovements.Add(possibleDirections[2]);
             }
-            else
+            else if(playerPosition.y - transform.position.y < 0)
             {
                 currentPossibleMovements.Add(possibleDirections[3]);
             }
@@ -70,12 +70,18 @@ public class ChasingEnemyController : BlindEnemyController
             int randDirection = Random.Range(0, currentPossibleMovements.Count);
             Vector3 possibleNextPosition = transform.position + currentPossibleMovements[randDirection];
 
+            if(Time.time - lastTimeMoved > (movementEverySecs + 1)) //TODO: change to a better planned variable
+            {
+                int randDirection2 = Random.Range(0, possibleDirections.Length);
+                possibleNextPosition = transform.position + possibleDirections[randDirection2];
+            }
+
             if(mapManagerScript.IsWantedPositionLegal(possibleNextPosition))
             {
                 _chasingNextPosition = possibleNextPosition;
-                currentPossibleMovements.Clear();
                 lastTimeMoved = Time.time;
             }
+            currentPossibleMovements.Clear();
         }
 
         if(transform.position != _chasingNextPosition)
