@@ -16,7 +16,7 @@ public class WeaponManager : MonoBehaviour
     private List<GameObject> _weaponsArt;
     private Transform _weaponHolder;
     private int _currentWeaponIndex;
-    private GameObject _currentWeapon;
+    private GameObject _currentInstantiatedWeapon;
 
 
     // Start is called before the first frame update
@@ -24,7 +24,7 @@ public class WeaponManager : MonoBehaviour
     {
         WeaponItem.onWeaponItemTaken += WeaponItemPickedUp;
         //_weaponScripts = new List<Weapon>();
-        _weaponHolder = GameObject.Find("Player/WeaponHolder").transform; //gameObject.transform.GetChild(1);//TODO: needs to add the weapon holder from player. GetChild or something
+        _weaponHolder = GameObject.Find("Player/WeaponHolder").transform;
 
         _currentWeaponIndex = (int)WeaponEnum.FIST;
         InitWeaponsArt();
@@ -44,14 +44,14 @@ public class WeaponManager : MonoBehaviour
     {
         if(Input.GetKeyDown("space"))
         {
-            _currentWeapon.GetComponent<Weapon>().Attack();
-            if(_currentWeapon.GetComponent<Weapon>().GetWeaponName() == "Gun")
+            _currentInstantiatedWeapon.GetComponent<Weapon>().Attack();
+            if(_currentInstantiatedWeapon.GetComponent<Weapon>().GetWeaponName() == "Gun")
             {
                 //probably will trigger an event from here to WeaponsUI OR through the gun attack method
             }
         }
 
-        if(_currentWeapon.GetComponent<Weapon>().IsTimeToDropWeapon())
+        if(_currentInstantiatedWeapon.GetComponent<Weapon>().IsTimeToDropWeapon())
         {
             Debug.Log("Should drop weapon now!");
             ChangeWeapon((int)WeaponEnum.FIST);
@@ -70,18 +70,14 @@ public class WeaponManager : MonoBehaviour
 
     private void WeaponItemPickedUp(GameObject weaponItem)
     {
-        string weaponItemName;
-        weaponItemName = weaponItem.name;
-        ChangeWeapon(WeaponIndexFactory(weaponItemName));
+        ChangeWeapon(WeaponIndexFactory(weaponItem.name));
     }
 
     private void ChangeWeapon(int weaponIndexToChange)
     {
-        //_weaponScripts[_currentWeaponIndex].DestroyWeapon();
-        Destroy(_currentWeapon);
+        Destroy(_currentInstantiatedWeapon);
         _weaponsArt[_currentWeaponIndex].GetComponent<SpriteRenderer>().enabled = false;
         InstantiateWeapon(weaponIndexToChange);
-
         _currentWeaponIndex = weaponIndexToChange;
         // trigger an event that WeaponsUI will catch to match the UI
 
@@ -103,9 +99,9 @@ public class WeaponManager : MonoBehaviour
 
      private void InstantiateWeapon(int weaponIndex)
     {
-        _currentWeapon = Instantiate(_weaponPrefabs[weaponIndex], _weaponHolder.position, Quaternion.identity);
-        _currentWeapon.transform.eulerAngles = gameObject.transform.eulerAngles;
-        _currentWeapon.transform.parent = gameObject.transform;
+        _currentInstantiatedWeapon = Instantiate(_weaponPrefabs[weaponIndex], _weaponHolder.position, Quaternion.identity);
+        _currentInstantiatedWeapon.transform.eulerAngles = gameObject.transform.eulerAngles;
+        _currentInstantiatedWeapon.transform.parent = gameObject.transform;
         _weaponsArt[weaponIndex].GetComponent<SpriteRenderer>().enabled = true;
     }
 }

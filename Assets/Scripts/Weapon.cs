@@ -24,7 +24,6 @@ public class Weapon : MonoBehaviour
     {
         if (_tempTimeBetweenAttacks < 0)
         {
-            Debug.Log("I'm attacking now");
             gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
             gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>().enabled = true;
             StartCoroutine(AttackTime());
@@ -34,7 +33,7 @@ public class Weapon : MonoBehaviour
 
     private IEnumerator AttackTime()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(_attackDuration);
         gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
         gameObject.transform.GetChild(0).GetComponent<BoxCollider2D>().enabled = false;
     }

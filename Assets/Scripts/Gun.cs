@@ -38,11 +38,18 @@ public class Gun : Weapon
     {
         if (_tempTimeBetweenAttacks < 0)
         {
-            GameObject bullet = Instantiate(bulletPrefab, muzzle.transform.position, Quaternion.identity);
-            bullet.GetComponent<BasicBullet>().SetBulletDirection(muzzle.gameObject.transform.eulerAngles);
+            ShootBullet();
             IncrementNumberOfShotsFired();
+            //TODO: trigger event to WeaponsUI 
             _tempTimeBetweenAttacks = _timeBtweenAttacks;
         }
+    }
+
+    private void ShootBullet()
+    {
+        GameObject bullet = Instantiate(bulletPrefab, muzzle.transform.position, Quaternion.identity);
+        bullet.GetComponent<BasicBullet>().SetBulletDirection(muzzle.gameObject.transform.eulerAngles);
+
     }
 
     private void IncrementNumberOfShotsFired()
