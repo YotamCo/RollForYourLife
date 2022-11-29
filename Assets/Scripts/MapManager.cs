@@ -125,7 +125,7 @@ public class MapManager : MonoBehaviour
         return false;
     }
 
-    bool IsInMapBounds(Vector3 position)
+    public bool IsInMapBounds(Vector3 position)
     {
         if(position.x < _leftX || position.x > _rightX
             || position.y < _bottomY || position.y > _topY)

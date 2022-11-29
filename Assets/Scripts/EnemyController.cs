@@ -36,7 +36,7 @@ public abstract class EnemyController : MonoBehaviour
 
     protected void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Weapon")
+        if(collision.tag == "Weapon" || collision.tag == "Bullet")
         {
             Die();
         }
