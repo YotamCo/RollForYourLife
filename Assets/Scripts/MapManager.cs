@@ -31,10 +31,6 @@ public class MapManager : MonoBehaviour
         _enemySpawnerScript     = gameObject.GetComponent<EnemySpawner>();
     }
 
-    void Update()
-    {
-    }
-
     public (int, int) getXMapBounds()
     {
         return (_leftX, _rightX);
@@ -109,18 +105,18 @@ public class MapManager : MonoBehaviour
             && !IsSameAsPlayerPosition(position)
             && !IsSameAsEnemiesPosition(position)
             && !IsSameAsDicePosition(position)
-            && !IsSameAsWeaponsPosition(position))
+            && !IsSameAsWeaponItemPosition(position))
             return true;
         return false;
     }
 
-    public bool IsMovementPositionLegal(Vector3 position)
+    public bool IsMovementPositionLegal(Vector3 position) //TODO: IsSameAsWeaponItemPosition is not implemented yet
     {
         if(IsInMapBounds(position) 
             && !DoesPositionHasWall(position)
             && !IsSameAsEnemiesPosition(position)
             && !IsSameAsDicePosition(position)
-            && !IsSameAsWeaponsPosition(position))
+            && !IsSameAsWeaponItemPosition(position))
             return true;
         return false;
     }
@@ -171,7 +167,7 @@ public class MapManager : MonoBehaviour
         return false;
     }
 
-    private bool IsSameAsWeaponsPosition(Vector3 pos)
+    private bool IsSameAsWeaponItemPosition(Vector3 pos)
     {
         return false; //TODO: Need to implement
     }
