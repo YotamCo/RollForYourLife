@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
-public class UIController : MonoBehaviour
+public class DiceUI : MonoBehaviour
 {
-    /* --------------- Dice Begin --------------- */
     public Image[] diceImages;
     public Sprite[] diceSprites;
     public GameObject dieScore;
@@ -16,31 +13,15 @@ public class UIController : MonoBehaviour
     private float _lastShowedDice = 0f;
 
     private int[] _diceValues;
-    /* --------------- Dice End --------------- */
-
-    /* --------------- Enemies Begin --------------- */
-    private EnemySpawner _enemySpawnerScript; 
-    public GameObject numOfEnemiesKilled;
-    private TextMeshProUGUI _numOfEnemiesKilledText;
-    /* --------------- Enemies End --------------- */
 
 
     // Start is called before the first frame update
     void Start()
     {
         _dieScoreText = dieScore.GetComponent<TextMeshProUGUI>();
-        _numOfEnemiesKilledText = numOfEnemiesKilled.GetComponent<TextMeshProUGUI>();
-        Debug.Assert(_numOfEnemiesKilledText != null);
 
         _diceValues = new int[]{-1, -1};
         DiceRollManager.onDieRoll += DieWasPickedUp;
-        EnemySpawner.onEnemyDeathUpdateUI += UpdateEnemiesKilledUI; /* It is not directly listening
-         to EnemyController.onEnemyDeath because there is a racing to which the event will reach
-         sooner. It might cause a delayed enemiesKilledText by 1 */
-
-        GameObject gameManager = GameObject.Find("GameManager");
-        Debug.Assert(gameManager != null);
-        _enemySpawnerScript = gameManager.GetComponent<EnemySpawner>();
     }
 
     // Update is called once per frame
@@ -74,12 +55,6 @@ public class UIController : MonoBehaviour
         _lastShowedDice = Time.time;
         _diceValues[0] = -1;
         _diceValues[1] = -1;
-    }
-
-    private void UpdateEnemiesKilledUI()
-    {
-        Debug.Assert(_numOfEnemiesKilledText.text != null);
-        _numOfEnemiesKilledText.text = _enemySpawnerScript.GetTotalNumOfEnemiesKilled().ToString();
     }
 
     void TurnOffDiceUI()

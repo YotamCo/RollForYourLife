@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Gun : Weapon
 {
+    public delegate void OnGunFires();
+    public static OnGunFires onGunFires;
+
     public GameObject bulletPrefab;
     
     [SerializeField] int _numOfShotsBeforeDrops = 3;
@@ -40,7 +43,6 @@ public class Gun : Weapon
         {
             ShootBullet();
             IncrementNumberOfShotsFired();
-            //TODO: trigger event to WeaponsUI 
             _tempTimeBetweenAttacks = _timeBtweenAttacks;
         }
     }
@@ -49,7 +51,7 @@ public class Gun : Weapon
     {
         GameObject bullet = Instantiate(bulletPrefab, muzzle.transform.position, Quaternion.identity);
         bullet.GetComponent<BasicBullet>().SetBulletDirection(muzzle.gameObject.transform.eulerAngles);
-
+        onGunFires?.Invoke();
     }
 
     private void IncrementNumberOfShotsFired()

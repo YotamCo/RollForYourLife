@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponManager : MonoBehaviour
-{
-    enum WeaponEnum
+public enum WeaponEnum
     {
         FIST = 0,
         SWORD = 1,
         GUN = 2
     }
+public class WeaponManager : MonoBehaviour
+{
+    public delegate void OnChangeWeapon(int newWeaponIndex);
+    public static OnChangeWeapon onChangeWeapon;
 
     [SerializeField] private List<GameObject> _weaponPrefabs; // fist, sword, gun
     //private List<Weapon> _weaponScripts;
@@ -53,19 +55,8 @@ public class WeaponManager : MonoBehaviour
 
         if(_currentInstantiatedWeapon.GetComponent<Weapon>().IsTimeToDropWeapon())
         {
-            Debug.Log("Should drop weapon now!");
             ChangeWeapon((int)WeaponEnum.FIST);
         }
-    }
-
-    void WeaponDropped(GameObject weaponItem)
-    {
-
-    }
-
-    void WeaponPickedUp(string weaponName)
-    {
-        
     }
 
     private void WeaponItemPickedUp(GameObject weaponItem)
@@ -79,8 +70,7 @@ public class WeaponManager : MonoBehaviour
         _weaponsArt[_currentWeaponIndex].GetComponent<SpriteRenderer>().enabled = false;
         InstantiateWeapon(weaponIndexToChange);
         _currentWeaponIndex = weaponIndexToChange;
-        // trigger an event that WeaponsUI will catch to match the UI
-
+        onChangeWeapon?.Invoke(weaponIndexToChange);
     }
 
     private int WeaponIndexFactory(string weaponName)

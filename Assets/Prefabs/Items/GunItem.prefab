@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4458141949690622106}
   - component: {fileID: 6884529432536790026}
   - component: {fileID: 7420801797479062583}
+  - component: {fileID: -2647535445956679736}
   m_Layer: 0
-  m_Name: Gun
+  m_Name: GunItem
   m_TagString: WeaponItem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,3 +102,15 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &-2647535445956679736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2561040919279931943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 184ad9499fa344c8193faf4bdd6dfe13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
