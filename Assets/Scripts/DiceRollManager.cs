@@ -8,6 +8,9 @@ public class DiceRollManager : MonoBehaviour
     public delegate void OnRollingSufficientScore();
     public static OnRollingSufficientScore onRollingSufficientScore;
 
+    public delegate void OnRollingWeaponItemSpawn();
+    public static OnRollingWeaponItemSpawn onRollingWeaponItemSpawn;
+
     public delegate void OnDieRoll(int dieScore, int dieIndex);
     public static OnDieRoll onDieRoll;
 
@@ -37,7 +40,7 @@ public class DiceRollManager : MonoBehaviour
     {
         if(totalDiceScore >= 2 && totalDiceScore < minimumScoreNeededForLevelUp)
         {
-
+            onRollingWeaponItemSpawn?.Invoke();
         }
         else if(totalDiceScore >= minimumScoreNeededForLevelUp && totalDiceScore <= 12)
         {

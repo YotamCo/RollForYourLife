@@ -20,11 +20,11 @@ public class WeaponSwordUI : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("Got to OnEnable");
         if(!_wasInitialized)
         {
             InitializeUI();
         }
+        _activatedAtTime = Time.time;
     }
 
     private void InitializeUI()
@@ -34,8 +34,6 @@ public class WeaponSwordUI : MonoBehaviour
         //_sworedScript = swordPrefab.GetComponent<Sword>();
         //_swordDuration = _sworedScript.GetTimeBeforeDrops();
         _swordDuration = 5f;
-        _activatedAtTime = Time.time;
-
         _timeUntilDropSword = transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
 
         _wasInitialized = true;

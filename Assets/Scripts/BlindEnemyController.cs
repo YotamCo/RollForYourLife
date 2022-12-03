@@ -46,6 +46,7 @@ public class BlindEnemyController : EnemyController
 
     protected override void SpecificEnemyDeathEffect()
     {
-        //TODO: add later
+        GameObject effect = Instantiate(_deathEffectPrefab, gameObject.transform.position, Quaternion.identity);
+        Destroy(effect, 1);
     }
 }

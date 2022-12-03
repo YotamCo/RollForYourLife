@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class EnemyController : MonoBehaviour
 {
+    [SerializeField] protected GameObject _deathEffectPrefab;
     [SerializeField] protected float movementEverySecs;
 
     public delegate void OnEnemyDeath(GameObject enemy);

@@ -103,10 +103,7 @@ public abstract class AbstractSpawnManager : MonoBehaviour
 
     protected abstract void SpecificInitializations();
     protected abstract bool SpecificShouldSpawnPrefab(); 
-
-    /*
-    returns an index to prefabsToSpawn
-    */
     protected abstract int ChooseWhichToSpawn();
     protected abstract void Spawn(Vector3 spawningPosition);
+    
 }

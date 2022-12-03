@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
+    enum SpawnerScriptsIndex
+    {
+        ENEMY_SPAWNER = 0,
+        DIE_SPAWNER = 1,
+        WEAPON_ITEM_SPAWNER = 2
+    }
+
     //[SerializeField] private int _height, _width;
     [SerializeField] private Tile tilePrefab; 
     [SerializeField] private GameObject wallPrefab;
@@ -21,6 +28,8 @@ public class MapManager : MonoBehaviour
     private DieSpawner _dieSpawnerScript;
     private EnemySpawner _enemySpawnerScript;
 
+    private List<AbstractSpawnManager> _spawnerScripts;
+
     // start is called before the first frame update
     void Start()
     {
@@ -29,6 +38,15 @@ public class MapManager : MonoBehaviour
         _player                 = GameObject.Find("Player");
         _dieSpawnerScript       = gameObject.GetComponent<DieSpawner>();
         _enemySpawnerScript     = gameObject.GetComponent<EnemySpawner>();
+        InitializeSpawnerScripts();
+    }
+
+    private void InitializeSpawnerScripts()
+    {
+        _spawnerScripts = new List<AbstractSpawnManager>();
+        _spawnerScripts.Add(gameObject.GetComponent<EnemySpawner>());
+        _spawnerScripts.Add(gameObject.GetComponent<DieSpawner>());
+        _spawnerScripts.Add(gameObject.GetComponent<WeaponItemSpawner>());
     }
 
     public (int, int) getXMapBounds()
@@ -103,9 +121,9 @@ public class MapManager : MonoBehaviour
         if(IsInMapBounds(position) 
             && !DoesPositionHasWall(position)
             && !IsSameAsPlayerPosition(position)
-            && !IsSameAsEnemiesPosition(position)
-            && !IsSameAsDicePosition(position)
-            && !IsSameAsWeaponItemPosition(position))
+            && !IsSameAsPrefabPosition(position, (int)SpawnerScriptsIndex.ENEMY_SPAWNER)
+            && !IsSameAsPrefabPosition(position, (int)SpawnerScriptsIndex.DIE_SPAWNER)
+            && !IsSameAsPrefabPosition(position, (int)SpawnerScriptsIndex.WEAPON_ITEM_SPAWNER))
             return true;
         return false;
     }
@@ -114,9 +132,9 @@ public class MapManager : MonoBehaviour
     {
         if(IsInMapBounds(position) 
             && !DoesPositionHasWall(position)
-            && !IsSameAsEnemiesPosition(position)
-            && !IsSameAsDicePosition(position)
-            && !IsSameAsWeaponItemPosition(position))
+            && !IsSameAsPrefabPosition(position, (int)SpawnerScriptsIndex.ENEMY_SPAWNER)
+            && !IsSameAsPrefabPosition(position, (int)SpawnerScriptsIndex.DIE_SPAWNER)
+            && !IsSameAsPrefabPosition(position, (int)SpawnerScriptsIndex.WEAPON_ITEM_SPAWNER))
             return true;
         return false;
     }
@@ -187,6 +205,23 @@ public class MapManager : MonoBehaviour
         }
         return false;
     }
+
+    private bool IsSameAsPrefabPosition(Vector3 pos, int prefabScriptIndex)
+    {
+        if(_spawnerScripts[prefabScriptIndex].enabled == false)
+        {
+            Debug.LogWarning("Spawner script is disabled");
+            return false;
+        }
+        List<GameObject> prefabInMap = _spawnerScripts[prefabScriptIndex].GetPrefabsOnMap();
+        foreach(GameObject prefab in prefabInMap)
+        {
+            if(prefab.transform.position.x == pos.x && prefab.transform.position.y == pos.y)
+                return true;
+        }
+        return false;
+    }
+    
 
     (int, int) ParseLocationToWallLocations(int x, int y)
     {

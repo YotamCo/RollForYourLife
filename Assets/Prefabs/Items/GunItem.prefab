@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -2647535445956679736}
   m_Layer: 0
   m_Name: GunItem
-  m_TagString: WeaponItem
+  m_TagString: GunWeaponItem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,11 +28,11 @@ Transform:
   m_GameObject: {fileID: 2561040919279931943}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.2393, y: -3.7369, z: -0.5}
-  m_LocalScale: {x: 0.6569, y: 0.6814, z: 1}
+  m_LocalScale: {x: 0.8717063, y: 0.90421784, z: 1.327}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6884529432536790026
 SpriteRenderer:
@@ -75,8 +75,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.7386166, g: 0.011764725, b: 0.77254903, a: 1}
+  m_Sprite: {fileID: 21300000, guid: a2889d0378861475391db162db92f4dd, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

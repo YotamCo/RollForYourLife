@@ -52,5 +52,6 @@
         "temp/":true,
         "Temp/":true
     },
-    "todo-tree.tree.showCountsInTree": true
+    "todo-tree.tree.showCountsInTree": true,
+    "omnisharp.useGlobalMono": "always"
 }

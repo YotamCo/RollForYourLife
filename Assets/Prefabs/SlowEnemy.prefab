@@ -353,7 +353,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8a0ce319b68842069352794bf1b6cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementEverySecs: 2.5
+  _deathEffectPrefab: {fileID: 2155049618853263384, guid: 94c509bb1845e4345b315d1779781c89, type: 3}
+  movementEverySecs: 1.5
   movingSpeed: 5
 --- !u!61 &-8587101380055667537
 BoxCollider2D:

@@ -30,6 +30,5 @@ public class WeaponItem : MonoBehaviour
     public void WeaponItemTaken()
     {
         onWeaponItemTaken?.Invoke(gameObject);
-        Destroy(gameObject);
     }
 }

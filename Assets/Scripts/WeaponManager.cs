@@ -13,6 +13,9 @@ public class WeaponManager : MonoBehaviour
     public delegate void OnChangeWeapon(int newWeaponIndex);
     public static OnChangeWeapon onChangeWeapon;
 
+    public delegate void OnEquipedWeapon(GameObject weaponItem);
+     public static OnEquipedWeapon onEquipedWeapon;
+
     [SerializeField] private List<GameObject> _weaponPrefabs; // fist, sword, gun
     //private List<Weapon> _weaponScripts;
     private List<GameObject> _weaponsArt;
@@ -61,7 +64,8 @@ public class WeaponManager : MonoBehaviour
 
     private void WeaponItemPickedUp(GameObject weaponItem)
     {
-        ChangeWeapon(WeaponIndexFactory(weaponItem.name));
+        ChangeWeapon(WeaponIndexFactory(weaponItem.tag));
+        onEquipedWeapon?.Invoke(weaponItem);
     }
 
     private void ChangeWeapon(int weaponIndexToChange)
@@ -73,15 +77,16 @@ public class WeaponManager : MonoBehaviour
         onChangeWeapon?.Invoke(weaponIndexToChange);
     }
 
-    private int WeaponIndexFactory(string weaponName)
+    private int WeaponIndexFactory(string weaponTag)
     {
-        if(weaponName == "SwordItem")
+        if(weaponTag == "SwordWeaponItem")
         {
-            Debug.Log("Picked up a sword");
+            Debug.Log("Picked a sword");
             return (int)WeaponEnum.SWORD;
         }
-        if(weaponName == "GunItem")
+        if(weaponTag == "GunWeaponItem")
         {
+            Debug.Log("Picked a gun");
             return (int)WeaponEnum.GUN;
         }
         return (int)WeaponEnum.FIST; //Should not get here

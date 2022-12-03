@@ -103,6 +103,7 @@ public class ChasingEnemyController : BlindEnemyController
 
     protected override void SpecificEnemyDeathEffect()
     {
-        return; //TODO: implement later
+        GameObject effect = Instantiate(_deathEffectPrefab, gameObject.transform.position, Quaternion.identity);
+        Destroy(effect, 1);
     }
 }

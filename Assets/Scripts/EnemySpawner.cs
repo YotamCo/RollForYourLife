@@ -58,10 +58,10 @@ public class EnemySpawner : AbstractSpawnManager
     protected override int ChooseWhichToSpawn()
     {
         float rand = (float)Random.Range(0, 101) / 100;
-        return IndexFactoryForSpawningMonster(rand);
+        return IndexFactoryForSpawningEnemy(rand);
     }
 
-    private int IndexFactoryForSpawningMonster(float rand)
+    private int IndexFactoryForSpawningEnemy(float rand)
     {
         float fromValue = 0;
         float untilValue = 0;
