@@ -25,15 +25,16 @@ public class EnemySpawner : AbstractSpawnManager
 
     protected override void SpecificInitializations()
     {
-        EnemyController.onEnemyDeath += EnemyDied;
+        EnemyController.onEnemyDeath += DestroyPrefab;
     }
 
-    private void EnemyDied(GameObject enemy)
+    protected override void DestroyPrefab(GameObject enemy)
     {
         _numOfEnemiesOnMap--;
         _totalEnemiesKilled++;
         RemoveFromPrefabsOnMap(enemy);
         Destroy(enemy);
+        //enemy.GetComponent<EnemyController>().KillEnemyOnMapClear();
         onEnemyDeathUpdateUI?.Invoke();
     }
 

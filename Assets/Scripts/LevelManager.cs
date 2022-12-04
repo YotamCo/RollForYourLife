@@ -3,22 +3,17 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    [SerializeField] int[] levelTargetScore;
     private int _currentLevel = 1;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public int GetCurrentLevel()
     {
         return _currentLevel;
+    }
+
+    public int GetLevelTargetScore()
+    {
+        return levelTargetScore[_currentLevel - 1];
     }
 
     public void LevelUp()

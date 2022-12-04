@@ -9,7 +9,7 @@ public class WeaponItemSpawner : AbstractSpawnManager
     protected override void SpecificInitializations()
     {
         DiceRollManager.onRollingWeaponItemSpawn += TimeToSpawnWeaponItem;
-        WeaponManager.onEquipedWeapon += DestroyWeaponItem;
+        WeaponManager.onEquipedWeapon += DestroyPrefab;
     }
 
     private void TimeToSpawnWeaponItem()
@@ -33,7 +33,7 @@ public class WeaponItemSpawner : AbstractSpawnManager
         return IndexFactoryForSpawningMonster(rand);
     }
 
-    private void DestroyWeaponItem(GameObject weaponItem)
+    protected override void DestroyPrefab(GameObject weaponItem)
     {
         //TODO: add visuals when picking weaponItem
         RemoveFromPrefabsOnMap(weaponItem);

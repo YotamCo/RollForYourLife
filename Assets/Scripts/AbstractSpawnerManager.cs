@@ -94,10 +94,7 @@ public abstract class AbstractSpawnManager : MonoBehaviour
         for(int i = prefabsOnMap.Count - 1; i >= 0; i--)
         {
             GameObject prefabToDestroy = prefabsOnMap[i];
-            prefabsOnMap.RemoveAt(i);
-            /*TODO: Later to add a proper protected function that each inherited class will
-            / implement and remove the prefab. For example special animation for monster dying.*/
-            Destroy(prefabToDestroy);
+            DestroyPrefab(prefabToDestroy);
         }
     }
 
@@ -105,5 +102,6 @@ public abstract class AbstractSpawnManager : MonoBehaviour
     protected abstract bool SpecificShouldSpawnPrefab(); 
     protected abstract int ChooseWhichToSpawn();
     protected abstract void Spawn(Vector3 spawningPosition);
+    protected abstract void DestroyPrefab(GameObject prefabObject);
     
 }

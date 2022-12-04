@@ -9,7 +9,6 @@ public class WeaponGunUI : MonoBehaviour
     private List<Image> _bulletImages;
     private bool _wasInitialized = false;
 
-
     private void OnEnable()
     {
         if(!_wasInitialized)

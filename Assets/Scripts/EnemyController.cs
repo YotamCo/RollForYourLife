@@ -9,6 +9,9 @@ public abstract class EnemyController : MonoBehaviour
 
     public delegate void OnEnemyDeath(GameObject enemy);
     public static OnEnemyDeath onEnemyDeath;
+    
+    public delegate void OnEnemyHitPlayer(); //right now enemies do 1 damage so no need to pass enemy and check how much damage it inflicts
+    public static OnEnemyHitPlayer onEnemyHitPlayer;
 
     protected MapManager mapManagerScript;
     protected int numOfPossibleMovingDirections = 4;
@@ -44,6 +47,7 @@ public abstract class EnemyController : MonoBehaviour
 
         if(collision.tag == "Player") //TODO: Will be left here because I think after is a monster touches the player it damages him and dies
         {
+            onEnemyHitPlayer?.Invoke();
             Die();
         }
     }
@@ -52,6 +56,11 @@ public abstract class EnemyController : MonoBehaviour
     {
         onEnemyDeath?.Invoke(gameObject);
         SpecificEnemyDeathEffect();
+    }
+
+    public void KillEnemyOnMapClear()
+    {
+        Die();
     }
 
     protected abstract void SpecificInitializations();

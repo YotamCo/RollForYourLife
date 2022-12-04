@@ -11,10 +11,14 @@ public class DiceRollManager : MonoBehaviour
     public delegate void OnRollingWeaponItemSpawn();
     public static OnRollingWeaponItemSpawn onRollingWeaponItemSpawn;
 
-    public delegate void OnDieRoll(int dieScore, int dieIndex);
+    public delegate void OnDieRoll(int dieScore, int totalRollScore);
     public static OnDieRoll onDieRoll;
 
+    public delegate void OnLevelUp();
+    public static OnLevelUp onLevelUp;
+
     private int[] _dieRollScore;
+    private int _totalDieScore = 0;
     private int _totalNumOfRolls = 0;
 
     [SerializeField] private int minimumScoreNeededForLevelUp = 10;
@@ -23,17 +27,6 @@ public class DiceRollManager : MonoBehaviour
     void Start()
     {
         DiceController.onDiePickedUp += RollDie;
-        _dieRollScore = new int[2];
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(isReadyToRollDice())
-        {
-            TriggerEventBasedOnScore(_dieRollScore[0] + _dieRollScore[1]);
-            _dieRollScore[1] = -1;
-        }
     }
 
     private void TriggerEventBasedOnScore(int totalDiceScore)
@@ -48,23 +41,18 @@ public class DiceRollManager : MonoBehaviour
         }
     }
 
-    private bool isReadyToRollDice()
-    {
-        if(_totalNumOfRolls > 0 && (_totalNumOfRolls % 2 == 0) && _dieRollScore[1] != -1)
-            return true;
-        return false;
-    }
-    /*void PassToNextLevel()
-    {
-        onRollingSufficientScore?.Invoke();
-    }*/
-
     private void RollDie(GameObject dieObject) //TODO: add animation and delay for the roll animation
     {
         int randScore = Random.Range(1, 7); //TODO: Make a better roll using function of number of enemies killed
         Debug.Log("Die Roll Score = " + randScore);
-        onDieRoll?.Invoke(randScore, _totalNumOfRolls % 2);
-        _dieRollScore[_totalNumOfRolls % 2] = randScore;
+        _totalDieScore += randScore;
+        onDieRoll?.Invoke(randScore, _totalDieScore);
         _totalNumOfRolls++;
+    }
+
+    public void LevelUp()
+    {
+        _totalDieScore = 0;
+        onLevelUp?.Invoke();
     }
 }

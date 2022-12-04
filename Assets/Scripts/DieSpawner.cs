@@ -12,7 +12,7 @@ public class DieSpawner : AbstractSpawnManager
 
     protected override void SpecificInitializations()
     {
-        DiceController.onDiePickedUp += DiePickedUp;
+        DiceController.onDiePickedUp += DestroyPrefab;
     }
 
     protected override bool SpecificShouldSpawnPrefab()
@@ -48,7 +48,7 @@ public class DieSpawner : AbstractSpawnManager
         return 0;
     }
 
-   private void DiePickedUp(GameObject dieObject)
+   protected override void DestroyPrefab(GameObject dieObject)
    {
         RemoveFromPrefabsOnMap(dieObject);
         Destroy(dieObject);    

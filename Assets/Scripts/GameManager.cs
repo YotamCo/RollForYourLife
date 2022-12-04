@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    MapManager mapManagerScript;
-    LevelManager levelManagerScript;
+    private MapManager _mapManagerScript;
+    private LevelManager _levelManagerScript;
+    private DiceRollManager _diceRollManagerScript;
 
     public delegate void OnCleanupBeforeLevelUp();
     public static OnCleanupBeforeLevelUp onCleanupBeforeLevelUp;
@@ -13,10 +14,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mapManagerScript = gameObject.GetComponent<MapManager>();
-        levelManagerScript = gameObject.GetComponent<LevelManager>();
+        _mapManagerScript       = gameObject.GetComponent<MapManager>();
+        _levelManagerScript     = gameObject.GetComponent<LevelManager>();
+        _diceRollManagerScript  = gameObject.GetComponent<DiceRollManager>();
 
-        DiceRollManager.onRollingSufficientScore += PassedCurrentLevel;
+        DiceRollManager.onDieRoll += CheckIfReachedTargetScore;
 
         FirstGameInitialization();
     }
@@ -27,10 +29,19 @@ public class GameManager : MonoBehaviour
         
     }
 
+    void CheckIfReachedTargetScore(int dieRollScore, int totalRollScore)
+    {
+        if(totalRollScore >= _levelManagerScript.GetLevelTargetScore())
+        {
+            PassedCurrentLevel();
+        }
+    }
+
     void PassedCurrentLevel()
     {
         onCleanupBeforeLevelUp?.Invoke();
-        levelManagerScript.LevelUp();
+        _levelManagerScript.LevelUp();
+        _diceRollManagerScript.LevelUp();
         StartCoroutine(DelayCoroutine());
         //mapGeneratorScript.PrepareNewLevelObstacles(levelManagerScript.GetCurrentLevel());
         //mapGeneratorScript.PrepareNewLevelObstacles(2);
@@ -38,12 +49,12 @@ public class GameManager : MonoBehaviour
 
     void FirstGameInitialization()
     {
-        mapManagerScript.PrepareNewLevelObstacles(levelManagerScript.GetCurrentLevel());
+        _mapManagerScript.PrepareNewLevelObstacles(_levelManagerScript.GetCurrentLevel());
     }
 
     IEnumerator DelayCoroutine()
     {
         yield return new WaitForSeconds(0.5f);
-        mapManagerScript.PrepareNewLevelObstacles(levelManagerScript.GetCurrentLevel());
+        _mapManagerScript.PrepareNewLevelObstacles(_levelManagerScript.GetCurrentLevel());
     }
 }
