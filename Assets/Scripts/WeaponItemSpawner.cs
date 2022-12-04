@@ -47,9 +47,6 @@ public class WeaponItemSpawner : AbstractSpawnManager
         for(int i = 0; i < prefabsToSpawn.Length; i++)
         {
             untilValue += (float)((float)(100 / prefabsToSpawn.Length) / 100);
-            Debug.Log("rand = " + rand);
-            Debug.Log("fromValue = " + fromValue);
-            Debug.Log("untilValue = " + untilValue);
             if(rand >= fromValue && rand < untilValue)
             {
                 return i;

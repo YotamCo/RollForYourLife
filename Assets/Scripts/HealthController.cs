@@ -37,12 +37,12 @@ public class HealthController : MonoBehaviour
     {
         Debug.Log("Player got hit");
         _health--;
-        onPlayerTakeDamage?.Invoke();
         if(_health <= 0)
         {
             //Invoke event player died
             Destroy(gameObject);
         }
+        onPlayerTakeDamage?.Invoke();
         _lastTimeTookDamage = Time.time;
     }
 }

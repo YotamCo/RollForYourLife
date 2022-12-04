@@ -14,7 +14,6 @@ public class WeaponSwordUI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log("Got to FixedUpdate");
         UpdateSwordUI(); //TODO: make sure it needs to be in FixedUpdate and not Update
     }
 
@@ -33,7 +32,7 @@ public class WeaponSwordUI : MonoBehaviour
         //Debug.Assert(swordPrefab != null); 
         //_sworedScript = swordPrefab.GetComponent<Sword>();
         //_swordDuration = _sworedScript.GetTimeBeforeDrops();
-        _swordDuration = 5f;
+        _swordDuration = 10f;
         _timeUntilDropSword = transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
 
         _wasInitialized = true;
