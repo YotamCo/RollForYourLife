@@ -4,7 +4,6 @@ using UnityEngine;
 
 public abstract class AbstractSpawnManager : MonoBehaviour
 {
-
     protected GameObject _gameManager;
     protected MapManager _mapManagerScript;
     protected int _leftX;
@@ -14,12 +13,14 @@ public abstract class AbstractSpawnManager : MonoBehaviour
     protected bool _shouldSpawnPrefab = false;
     [SerializeField] protected GameObject[] prefabsToSpawn;
     protected List<GameObject> prefabsOnMap;
+    protected bool _spawningEnabled = true;
+
     // Start is called before the first frame update
     protected void Start()
     {
         _gameManager = GameObject.Find("GameManager");
         _mapManagerScript = _gameManager.GetComponent<MapManager>();
-        GameManager.onCleanupBeforeLevelUp += ClearPrefabsOnMap;
+        LevelTransitionManager.onCleanupBeforeLevelUp += ClearPrefabsOnMap;
         prefabsOnMap = new List<GameObject>();
 
         (_leftX, _rightX) = GetXMapBounds();
@@ -31,13 +32,16 @@ public abstract class AbstractSpawnManager : MonoBehaviour
     // Update is called once per frame
     protected void Update()
     {
-        if(_shouldSpawnPrefab || ShouldSpawnPrefab())
+        if(_spawningEnabled)
         {
-            Vector3 spawnPosition = ChooseSpawningPosition();
-            if(IsSpawningPositionLegal(spawnPosition))
+            if(_shouldSpawnPrefab || ShouldSpawnPrefab())
             {
-                Spawn(spawnPosition);
-                _shouldSpawnPrefab = false;
+                Vector3 spawnPosition = ChooseSpawningPosition();
+                if(IsSpawningPositionLegal(spawnPosition))
+                {
+                    Spawn(spawnPosition);
+                    _shouldSpawnPrefab = false;
+                }
             }
         }
     }
@@ -98,10 +102,14 @@ public abstract class AbstractSpawnManager : MonoBehaviour
         }
     }
 
+    public void ChangeSpawningStatus(bool isSetToSpawning)
+    {
+        _spawningEnabled = isSetToSpawning;
+    }
+
     protected abstract void SpecificInitializations();
     protected abstract bool SpecificShouldSpawnPrefab(); 
     protected abstract int ChooseWhichToSpawn();
     protected abstract void Spawn(Vector3 spawningPosition);
     protected abstract void DestroyPrefab(GameObject prefabObject);
-    
 }

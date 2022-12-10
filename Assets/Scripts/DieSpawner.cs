@@ -6,7 +6,7 @@ public class DieSpawner : AbstractSpawnManager
 {
     [SerializeField] float _timeBetweenPossibleSpawns = 10f;
     private float _lastSpawnTrialTime = 0;
-    [SerializeField] float _spawningProbability = 0.3f;
+    [SerializeField] [Range(0, 1)] float _spawningProbability = 0.3f;
 
 
 

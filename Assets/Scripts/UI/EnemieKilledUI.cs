@@ -4,11 +4,9 @@ using TMPro;
 
 public class EnemieKilledUI : MonoBehaviour
 {
-    /* --------------- Enemies Begin --------------- */
     private EnemySpawner _enemySpawnerScript; 
     public GameObject numOfEnemiesKilled;
     private TextMeshProUGUI _numOfEnemiesKilledText;
-    /* --------------- Enemies End --------------- */
 
     // Start is called before the first frame update
     void Start()

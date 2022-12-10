@@ -18,7 +18,7 @@ public class DiceUI : MonoBehaviour
     {
         _totalDieScoreText = dieScore.GetComponent<TextMeshProUGUI>();
         DiceRollManager.onDieRoll += UpdateDiceUI;
-        DiceRollManager.onLevelUp += ZeroTotalRollScore;
+        DiceRollManager.onZeroTotalDieScore += ZeroTotalRollScore;
     }
 
     // Update is called once per frame
@@ -35,15 +35,15 @@ public class DiceUI : MonoBehaviour
         dieImage.gameObject.SetActive(true);
         dieImage.sprite = diceSprites[dieScore - 1];
         int newTotalDieScore = totalDieScore;
-        _totalDieScoreText.text = (newTotalDieScore).ToString();
+        _totalDieScoreText.text = newTotalDieScore.ToString();
 
         _lastShowedDice = Time.time;
     }
 
-    private void ZeroTotalRollScore()
+    public void ZeroTotalRollScore()
     {
-        int newTotalScore = 0;
-        _totalDieScoreText.text = newTotalScore.ToString();
+        int newTotalDieScore = 0;
+        _totalDieScoreText.text = newTotalDieScore.ToString();
     }
 
     void TurnOffDiceUI()

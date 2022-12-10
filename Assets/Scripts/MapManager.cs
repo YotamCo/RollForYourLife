@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
-    enum SpawnerScriptsIndex
+    enum SpawnerScriptsIndex //TODO: move it to a more generic place. Understand where does it fit. After doing it, remove the same enum from LevelTransitionManager
     {
         ENEMY_SPAWNER = 0,
         DIE_SPAWNER = 1,
@@ -30,11 +30,9 @@ public class MapManager : MonoBehaviour
 
     private List<AbstractSpawnManager> _spawnerScripts;
 
-    // start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _wallLocations = new int[13, 8];
-
         _player                 = GameObject.Find("Player");
         _dieSpawnerScript       = gameObject.GetComponent<DieSpawner>();
         _enemySpawnerScript     = gameObject.GetComponent<EnemySpawner>();
@@ -59,7 +57,7 @@ public class MapManager : MonoBehaviour
         return (_bottomY, _topY);
     }
 
-    public void PrepareNewLevelObstacles(int level)
+    public void PrepareNewLevelMap(int level)
     {
         ClearWallLocations();
         string subLevelsLocation = "Assets/Levels/Level_" + level.ToString();
@@ -214,8 +212,11 @@ public class MapManager : MonoBehaviour
             return false;
         }
         List<GameObject> prefabInMap = _spawnerScripts[prefabScriptIndex].GetPrefabsOnMap();
+        //Debug.Log("Got my prefabs on map");
         foreach(GameObject prefab in prefabInMap)
         {
+            //Debug.Log("I'm here1");
+            Debug.Assert(prefab != null);
             if(prefab.transform.position.x == pos.x && prefab.transform.position.y == pos.y)
                 return true;
         }

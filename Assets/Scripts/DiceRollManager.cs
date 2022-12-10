@@ -14,8 +14,8 @@ public class DiceRollManager : MonoBehaviour
     public delegate void OnDieRoll(int dieScore, int totalRollScore);
     public static OnDieRoll onDieRoll;
 
-    public delegate void OnLevelUp();
-    public static OnLevelUp onLevelUp;
+    public delegate void OnZeroTotalDieScore();
+    public static OnZeroTotalDieScore onZeroTotalDieScore;
 
     private int[] _dieRollScore;
     private int _totalDieScore = 0;
@@ -50,9 +50,9 @@ public class DiceRollManager : MonoBehaviour
         _totalNumOfRolls++;
     }
 
-    public void LevelUp()
+    public void ZeroTotalDieScore()
     {
         _totalDieScore = 0;
-        onLevelUp?.Invoke();
+        onZeroTotalDieScore?.Invoke();
     }
 }
