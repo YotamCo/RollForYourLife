@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class HealthController : MonoBehaviour
 {
-    [SerializeField] float _invicibilityPeriod = 1f;
-    [SerializeField] bool _isPlayerInvicible = false;
+    [SerializeField] float _invincibilityPeriod = 1f;
+    [SerializeField] bool _isPlayerInvincible = false;
 
     private float _lastTimeTookDamage = 0f;
     private int _health = 3;
@@ -26,8 +26,8 @@ public class HealthController : MonoBehaviour
 
     private void GotHit()
     {
-        if(Time.time - _lastTimeTookDamage > _invicibilityPeriod 
-        && !_isPlayerInvicible)
+        if(Time.time - _lastTimeTookDamage > _invincibilityPeriod 
+        && !_isPlayerInvincible)
         {
             TakeDamage();
         }

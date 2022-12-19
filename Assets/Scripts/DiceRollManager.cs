@@ -21,8 +21,6 @@ public class DiceRollManager : MonoBehaviour
     private int _totalDieScore = 0;
     private int _totalNumOfRolls = 0;
 
-    [SerializeField] private int minimumScoreNeededForLevelUp = 10;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -31,14 +29,14 @@ public class DiceRollManager : MonoBehaviour
 
     private void TriggerEventBasedOnScore(int totalDiceScore)
     {
-        if(totalDiceScore >= 2 && totalDiceScore < minimumScoreNeededForLevelUp)
+        /*if(totalDiceScore >= 2 && totalDiceScore < minimumScoreNeededForLevelUp)
         {
             onRollingWeaponItemSpawn?.Invoke();
         }
         else if(totalDiceScore >= minimumScoreNeededForLevelUp && totalDiceScore <= 12)
         {
             onRollingSufficientScore?.Invoke();
-        }
+        }*/
     }
 
     private void RollDie(GameObject dieObject) //TODO: add animation and delay for the roll animation

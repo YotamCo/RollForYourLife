@@ -4,22 +4,36 @@ using UnityEngine;
 
 public class WeaponItemSpawner : AbstractSpawnManager
 {
-    private bool _shouldSpawnWeaponItem = false;
+    [SerializeField] private int _numOfEnemiesToKillForSpawningWeapon = 10;
+
+    private int _totalEnemiesKilled = 0;
+    private int _lastSpawnedTotalEnemiesKilled = 0;
+
+
+    public int GetNumOfEnemiesToKillForSpawningWeapon()
+    {
+        return _numOfEnemiesToKillForSpawningWeapon;
+    }
+
+    public void SetNumOfEnemiesToKillForSpawningWeapon(int numOfEnemiesToKillForSpawningWeapon)
+    {
+        _numOfEnemiesToKillForSpawningWeapon = numOfEnemiesToKillForSpawningWeapon;
+    }
 
     protected override void SpecificInitializations()
     {
-        DiceRollManager.onRollingWeaponItemSpawn += TimeToSpawnWeaponItem;
         WeaponManager.onEquipedWeapon += DestroyPrefab;
+        EnemySpawner.onEnemyDied += UpdateNumOfEnemiesKilled;
     }
 
-    private void TimeToSpawnWeaponItem()
+    private void UpdateNumOfEnemiesKilled(int totalEnemiesKilled)
     {
-        _shouldSpawnWeaponItem = true;
+        _totalEnemiesKilled = totalEnemiesKilled;
     }
 
     protected override bool SpecificShouldSpawnPrefab()
     {
-        if(_shouldSpawnWeaponItem)
+        if(_totalEnemiesKilled - _lastSpawnedTotalEnemiesKilled >= _numOfEnemiesToKillForSpawningWeapon)
         {
             return true;
         }
@@ -30,7 +44,7 @@ public class WeaponItemSpawner : AbstractSpawnManager
     {
         //TODO: Maybe add percentage option to choose like in EnemySpawner
         float rand = (float)Random.Range(0, 101) / 100;
-        return IndexFactoryForSpawningMonster(rand);
+        return IndexFactoryForSpawningWeaponItem(rand);
     }
 
     protected override void DestroyPrefab(GameObject weaponItem)
@@ -40,7 +54,7 @@ public class WeaponItemSpawner : AbstractSpawnManager
         Destroy(weaponItem);
     }
 
-    private int IndexFactoryForSpawningMonster(float rand)
+    private int IndexFactoryForSpawningWeaponItem(float rand)
     {
         float fromValue = 0;
         float untilValue = 0;
@@ -62,6 +76,6 @@ public class WeaponItemSpawner : AbstractSpawnManager
                                          spawningPosition, Quaternion.identity);
         AddToPrefabsOnMap(weaponItem);
 
-        _shouldSpawnWeaponItem = false;
+        _lastSpawnedTotalEnemiesKilled = _totalEnemiesKilled;
     }
 }

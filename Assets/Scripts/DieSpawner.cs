@@ -9,7 +9,6 @@ public class DieSpawner : AbstractSpawnManager
     [SerializeField] [Range(0, 1)] float _spawningProbability = 0.3f;
 
 
-
     protected override void SpecificInitializations()
     {
         DiceController.onDiePickedUp += DestroyPrefab;

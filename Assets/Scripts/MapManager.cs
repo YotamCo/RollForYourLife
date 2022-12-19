@@ -217,6 +217,8 @@ public class MapManager : MonoBehaviour
         {
             //Debug.Log("I'm here1");
             Debug.Assert(prefab != null);
+            if(prefab == null)
+                Debug.Log(prefabScriptIndex);
             if(prefab.transform.position.x == pos.x && prefab.transform.position.y == pos.y)
                 return true;
         }

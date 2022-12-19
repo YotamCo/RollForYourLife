@@ -24,7 +24,7 @@ public class LevelTransitionManager : MonoBehaviour
     public delegate void OnCleanupBeforeLevelUp();
     public static OnCleanupBeforeLevelUp onCleanupBeforeLevelUp;
 
-    public delegate void OnUpdatingTargetScoreWhenLevelUp(int newScore);
+    public delegate void OnUpdatingTargetScoreWhenLevelUp(int newTargetScore);
     public static OnUpdatingTargetScoreWhenLevelUp onUpdatingTargetScoreWhenLevelUp;
 
     private int _currentLevel = 1;

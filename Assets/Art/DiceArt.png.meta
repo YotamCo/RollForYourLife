@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b65e2214f69324b8a821cb7620bead62
+guid: 19b6bf9ad2387453dbf2263faf443652
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -106,22 +106,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GeneralDie
+      name: DiceArt_0
       rect:
         serializedVersion: 2
-        x: 322
-        y: 178
-        width: 96
-        height: 95
+        x: 7
+        y: 11
+        width: 86
+        height: 91
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 7, y: 0, z: 6, w: 5}
+      border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3083b65a524b74bf49cca6cd93c7dc16
-      internalID: 637121167
+      spriteID: 11735c9fc28804e91b6ec87a5948b0ee
+      internalID: -1778869367
       vertices: []
       indices: 
       edges: []
@@ -137,7 +137,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      GeneralDie: 637121167
+      DiceArt_0: -1778869367
   spritePackingTag: 
   pSDRemoveMatte: 0
   userData: 
