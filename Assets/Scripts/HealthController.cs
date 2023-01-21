@@ -16,7 +16,7 @@ public class HealthController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EnemyController.onEnemyHitPlayer += GotHit;
+        AbstractEnemy.onEnemyHitPlayer += GotHit;
     }
 
     public int GetHealth()
@@ -35,7 +35,6 @@ public class HealthController : MonoBehaviour
 
     private void TakeDamage()
     {
-        Debug.Log("Player got hit");
         _health--;
         if(_health <= 0)
         {

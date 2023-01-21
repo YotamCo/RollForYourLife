@@ -2,22 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponItemSpawner : AbstractSpawnManager
+public class WeaponItemSpawner : AbstractSpawner
 {
-    [SerializeField] private int _numOfEnemiesToKillForSpawningWeapon = 10;
-
-    private int _totalEnemiesKilled = 0;
-    private int _lastSpawnedTotalEnemiesKilled = 0;
+    [SerializeField] private int numOfEnemiesToKillForSpawningWeapon = 10;
+    private int totalEnemiesKilled = 0;
+    private int lastSpawnedTotalEnemiesKilled = 0;
 
 
     public int GetNumOfEnemiesToKillForSpawningWeapon()
     {
-        return _numOfEnemiesToKillForSpawningWeapon;
+        return numOfEnemiesToKillForSpawningWeapon;
     }
 
     public void SetNumOfEnemiesToKillForSpawningWeapon(int numOfEnemiesToKillForSpawningWeapon)
     {
-        _numOfEnemiesToKillForSpawningWeapon = numOfEnemiesToKillForSpawningWeapon;
+        this.numOfEnemiesToKillForSpawningWeapon = numOfEnemiesToKillForSpawningWeapon;
     }
 
     protected override void SpecificInitializations()
@@ -28,12 +27,12 @@ public class WeaponItemSpawner : AbstractSpawnManager
 
     private void UpdateNumOfEnemiesKilled(int totalEnemiesKilled)
     {
-        _totalEnemiesKilled = totalEnemiesKilled;
+        this.totalEnemiesKilled = totalEnemiesKilled;
     }
 
     protected override bool SpecificShouldSpawnPrefab()
     {
-        if(_totalEnemiesKilled - _lastSpawnedTotalEnemiesKilled >= _numOfEnemiesToKillForSpawningWeapon)
+        if(totalEnemiesKilled - lastSpawnedTotalEnemiesKilled >= numOfEnemiesToKillForSpawningWeapon)
         {
             return true;
         }
@@ -50,7 +49,7 @@ public class WeaponItemSpawner : AbstractSpawnManager
     protected override void DestroyPrefab(GameObject weaponItem)
     {
         //TODO: add visuals when picking weaponItem
-        RemoveFromPrefabsOnMap(weaponItem);
+        RemoveFromPrefabsOnMapList(weaponItem);
         Destroy(weaponItem);
     }
 
@@ -74,8 +73,8 @@ public class WeaponItemSpawner : AbstractSpawnManager
     {
         GameObject weaponItem = Instantiate(prefabsToSpawn[ChooseWhichToSpawn()],
                                          spawningPosition, Quaternion.identity);
-        AddToPrefabsOnMap(weaponItem);
+        AddToPrefabsOnMapList(weaponItem);
 
-        _lastSpawnedTotalEnemiesKilled = _totalEnemiesKilled;
+        lastSpawnedTotalEnemiesKilled = totalEnemiesKilled;
     }
 }

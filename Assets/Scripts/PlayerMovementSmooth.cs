@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class PlayerMovementSmooth : MonoBehaviour
 {
-    [SerializeField] private float _movingSpeed = 10;
+    [SerializeField] private float movementSpeed = 10;
     [SerializeField] private float _movementTimeDelay = 0.1f;
     private float moveTime;
-    GameObject gameManager;
-    MapManager mapManagerScript;
+    ValidPositionChecker validPositionChecker;
     // Start is called before the first frame update
     Vector3 playerDircetion = Vector3.forward * 0;
     Vector3 wantedPosition;
     void Start()
     {
-        gameManager = GameObject.Find("GameManager");
-        mapManagerScript = gameManager.GetComponent<MapManager>();
+        validPositionChecker = new ValidPositionChecker();
 
         wantedPosition = transform.position;
 
@@ -40,7 +38,7 @@ public class PlayerMovementSmooth : MonoBehaviour
             //transform.position = wantedPosition;
             if(transform.position != wantedPosition)
             {
-                transform.position = Vector3.MoveTowards(transform.position, wantedPosition, _movingSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, wantedPosition, movementSpeed * Time.deltaTime);
                 moveTime = _movementTimeDelay;
             }
             //moveTime = _movementTimeDelay;
@@ -68,7 +66,7 @@ public class PlayerMovementSmooth : MonoBehaviour
                 playerDircetion = Vector3.forward * 180;
             }
 
-            if(!mapManagerScript.IsMovementPositionLegal(wantedPosition))
+            if(!validPositionChecker.IsMovementPositionLegal(wantedPosition))
             {
                 wantedPosition = transform.position;
             }

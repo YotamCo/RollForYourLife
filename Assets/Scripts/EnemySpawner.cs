@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 //using EnemySpawnerRateCalculator;
 
-public class EnemySpawner : AbstractSpawnManager
+public class EnemySpawner : AbstractSpawner
 {
-    [SerializeField] private float _initialTimeBetweenSpawns = 5f;
-    [SerializeField] private GameObject _preEnemySpawnAnimationPrefab;
-    private float _timeBetweenSpawns;
-    [SerializeField] private float[] _spawningProbabilityBetweenMonsters; //Has to sum up to 1
-    [SerializeField] private int _maxNumOfEnemiesOnMap = 5;
-
-    private int _numOfEnemiesOnMap = 0;
+    [SerializeField] private float initialTimeBetweenSpawns = 5f;
+    [SerializeField] private GameObject preEnemySpawnAnimationPrefab;
+    [SerializeField] private float[] spawningProbabilityBetweenMonsters; //Has to sum up to 1
+    [SerializeField] private int maxNumOfEnemiesOnMap = 5;
+    [SerializeField] private float preEnemySpawnEffectDuration = 2f;
 
     public delegate void OnEnemyDeathUpdateUI();
     public static OnEnemyDeathUpdateUI onEnemyDeathUpdateUI;
@@ -19,25 +17,27 @@ public class EnemySpawner : AbstractSpawnManager
     public delegate void OnEnemyDied(int totalEnemiesKilled);
     public static OnEnemyDied onEnemyDied;
 
-    private int _totalEnemiesKilled = 0;
-    
-    private float _lastSpawnTime = 0;
-
-    //private EnemySpawnerRateCalculator _enemySpawnerRateCalculator;
-    private LevelTransitionManager _levelTransitionManagerScript;
+    private float timeBetweenSpawns;
+    private float lastSpawnTime = 0;
+    private int totalEnemiesKilled = 0;
+    private int numOfEnemiesOnMap = 0;
+    private LevelTransitionManager levelTransitionManagerScript;
     
 
     public int GetTotalNumOfEnemiesKilled()
     {
-        return _totalEnemiesKilled;
+        return totalEnemiesKilled;
     }
 
     protected override void SpecificInitializations()
     {
-        EnemyController.onEnemyDeath += DestroyPrefab;
+        AbstractEnemy.onEnemyDeath += DestroyPrefab;
         //LevelTransitionManager.onUpdatingTargetScoreWhenLevelUp += InitSpawnRateCalculator(int newTargetScore);
-        _timeBetweenSpawns = _initialTimeBetweenSpawns;
+        timeBetweenSpawns = initialTimeBetweenSpawns;
         
+        //TODO - Refactor
+        // add a calculator for rate of enemies spawned. Maybe also add an Enemy wave spawner
+
         //_enemySpawnerRateCalculator = new EnemySpawnerRateCalculator();
         //_enemySpawnerRateCalculator.Init(_timeBetweenSpawns, )
     }
@@ -49,20 +49,20 @@ public class EnemySpawner : AbstractSpawnManager
 
     protected override void DestroyPrefab(GameObject enemy)
     {
-        _numOfEnemiesOnMap--;
-        _totalEnemiesKilled++;
-        RemoveFromPrefabsOnMap(enemy);
+        numOfEnemiesOnMap--;
+        totalEnemiesKilled++;
+        RemoveFromPrefabsOnMapList(enemy);
         Destroy(enemy);
-        //enemy.GetComponent<EnemyController>().KillEnemyOnMapClear();
         onEnemyDeathUpdateUI?.Invoke();
         onEnemyDied?.Invoke(GetTotalNumOfEnemiesKilled());
     }
 
     protected override bool SpecificShouldSpawnPrefab()
     {
-        if((Time.time - _lastSpawnTime > _timeBetweenSpawns) && (_numOfEnemiesOnMap < _maxNumOfEnemiesOnMap))
+        if((Time.time - lastSpawnTime > timeBetweenSpawns) 
+            && (numOfEnemiesOnMap < maxNumOfEnemiesOnMap))
         {
-            _lastSpawnTime = Time.time;
+            lastSpawnTime = Time.time;
             return true;
         }
         return false;
@@ -70,20 +70,25 @@ public class EnemySpawner : AbstractSpawnManager
     
     protected override void Spawn(Vector3 spawningPosition)
     {
-        GameObject preEnemySpawnAnimation = Instantiate(_preEnemySpawnAnimationPrefab, 
-                                                    spawningPosition, Quaternion.identity);
-        Destroy(preEnemySpawnAnimation, 2f);
+        SpawningPreEnemySpawnEffect(spawningPosition);
         GameObject enemy = Instantiate(prefabsToSpawn[ChooseWhichToSpawn()],
                                          spawningPosition, Quaternion.identity);
-        AddToPrefabsOnMap(enemy);
+        AddToPrefabsOnMapList(enemy);
         enemy.SetActive(false);
-        _numOfEnemiesOnMap++;
+        numOfEnemiesOnMap++;
         StartCoroutine(SpawnInDelay(spawningPosition, enemy));
+    }
+
+    private void SpawningPreEnemySpawnEffect(Vector3 spawningPosition)
+    {
+        GameObject preEnemySpawnAnimation = Instantiate(preEnemySpawnAnimationPrefab, 
+                                                    spawningPosition, Quaternion.identity);
+        Destroy(preEnemySpawnAnimation, preEnemySpawnEffectDuration);
     }
 
     IEnumerator SpawnInDelay(Vector3 spawningPosition, GameObject enemy)
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(preEnemySpawnEffectDuration);
         if(enemy != null) //Enemy might have been destroyed when passing to next level
         {
             enemy.SetActive(true);
@@ -100,20 +105,20 @@ public class EnemySpawner : AbstractSpawnManager
     {
         float fromValue = 0;
         float untilValue = 0;
-        for(int i = 0; i < _spawningProbabilityBetweenMonsters.Length; i++)
+        for(int i = 0; i < spawningProbabilityBetweenMonsters.Length; i++)
         {
-            untilValue += _spawningProbabilityBetweenMonsters[i];
+            untilValue += spawningProbabilityBetweenMonsters[i];
             if(rand >= fromValue && rand < untilValue)
             {
                 return i;
             }
-            fromValue += _spawningProbabilityBetweenMonsters[i];
+            fromValue += spawningProbabilityBetweenMonsters[i];
         }
-        return _spawningProbabilityBetweenMonsters.Length - 1;
+        return spawningProbabilityBetweenMonsters.Length - 1;
     }
 
     private void SetTimeBetweenSpawns(float timeBetweenSpawns)
     {
-        _timeBetweenSpawns = timeBetweenSpawns;
+        this.timeBetweenSpawns = timeBetweenSpawns;
     }
 }

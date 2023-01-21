@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EnemyController : MonoBehaviour
+public abstract class AbstractEnemy : MonoBehaviour
 {
-    [SerializeField] protected GameObject _deathEffectPrefab;
+    [SerializeField] protected GameObject deathEffectPrefab;
+    [SerializeField] protected float movementSpeed = 5;
     [SerializeField] protected float movementEverySecs;
 
     public delegate void OnEnemyDeath(GameObject enemy);
@@ -13,29 +14,19 @@ public abstract class EnemyController : MonoBehaviour
     public delegate void OnEnemyHitPlayer(); //right now enemies do 1 damage so no need to pass enemy and check how much damage it inflicts
     public static OnEnemyHitPlayer onEnemyHitPlayer;
 
-    protected MapManager mapManagerScript;
+    protected ValidPositionChecker validPositionChecker;
     protected int numOfPossibleMovingDirections = 4;
     protected Vector3[] possibleDirections;
     protected float lastTimeMoved = 0f;
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        //optionalMoves = {right, left, up, down}
         possibleDirections = new []{ new Vector3(1f, 0f, 0f), new Vector3(-1f, 0f, 0f),
                                 new Vector3(0f, 1f, 0f), new Vector3(0f, -1f, 0f)};
-        GameObject gameManager = GameObject.Find("GameManager");
-        Debug.Assert(gameManager != null);
-        mapManagerScript = gameManager.GetComponent<MapManager>();
+        validPositionChecker = new ValidPositionChecker();
 
         SpecificInitializations();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     protected void OnTriggerEnter2D(Collider2D collision)
@@ -45,7 +36,7 @@ public abstract class EnemyController : MonoBehaviour
             Die();
         }
 
-        if(collision.tag == "Player") //TODO: Will be left here because I think after is a monster touches the player it damages him and dies
+        if(collision.tag == "Player")
         {
             onEnemyHitPlayer?.Invoke();
             Die();

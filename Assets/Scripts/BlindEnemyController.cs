@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlindEnemyController : EnemyController
+public class BlindEnemyController : AbstractEnemy
 {
-    private Vector3 _blindNextPosition;
+    private Vector3 blindNextPosition;
 
-    [SerializeField] protected float movingSpeed = 5; //TODO: Should put it in EnemyController
-
-    // Update is called once per frame
+    //TODO - Refactor
+    // Make it work the same on on different computers. delta time
     void Update()
     {
         Move();
@@ -19,34 +18,34 @@ public class BlindEnemyController : EnemyController
         MoveRandomly();
     }
 
-    protected void MoveRandomly()
+    private void MoveRandomly()
     {
         if(Time.time - lastTimeMoved > movementEverySecs)
         {
             int randDirection = Random.Range(0, numOfPossibleMovingDirections);
             Vector3 possibleNextPosition = transform.position + possibleDirections[randDirection];
 
-            if(mapManagerScript.IsMovementPositionLegal(possibleNextPosition))
+            if(validPositionChecker.IsMovementPositionLegal(possibleNextPosition)) 
             {
-                _blindNextPosition = possibleNextPosition;
+                blindNextPosition = possibleNextPosition;
                 lastTimeMoved = Time.time;
             }
         }
 
-        if(transform.position != _blindNextPosition)
+        if(transform.position != blindNextPosition)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _blindNextPosition, movingSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, blindNextPosition, movementSpeed * Time.deltaTime);
         }
     }
 
     protected override void SpecificInitializations()
     {
-        _blindNextPosition = transform.position;
+        blindNextPosition = transform.position;
     }
 
     protected override void SpecificEnemyDeathEffect()
     {
-        GameObject effect = Instantiate(_deathEffectPrefab, gameObject.transform.position, Quaternion.identity);
+        GameObject effect = Instantiate(deathEffectPrefab, gameObject.transform.position, Quaternion.identity);
         Destroy(effect, 1);
     }
 }

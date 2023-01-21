@@ -34,16 +34,16 @@ public class DiceUI : MonoBehaviour
     {
         dieImage.gameObject.SetActive(true);
         dieImage.sprite = diceSprites[dieScore - 1];
-        int newTotalDieScore = totalDieScore;
-        _totalDieScoreText.text = newTotalDieScore.ToString();
+        int tempNewTotalDieScore = totalDieScore;
+        _totalDieScoreText.text = tempNewTotalDieScore.ToString();
 
         _lastShowedDice = Time.time;
     }
 
     public void ZeroTotalRollScore()
     {
-        int newTotalDieScore = 0;
-        _totalDieScoreText.text = newTotalDieScore.ToString();
+        int tempNewTotalDieScore = 0;
+        _totalDieScoreText.text = tempNewTotalDieScore.ToString();
     }
 
     void TurnOffDiceUI()

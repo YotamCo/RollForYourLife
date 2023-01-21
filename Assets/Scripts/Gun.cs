@@ -20,7 +20,7 @@ public class Gun : Weapon
 
     protected override void SpecificWeaponInitializations()
     {
-        muzzle = GameObject.Find("Player/WeaponHolder"); //TODO: maybe change to another game object
+        muzzle = GameObject.Find("Player/WeaponHolder");
     }
 
     public override bool IsTimeToDropWeapon()

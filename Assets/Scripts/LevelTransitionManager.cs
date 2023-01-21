@@ -5,56 +5,91 @@ using UnityEngine;
 
 public class LevelTransitionManager : MonoBehaviour
 {
-    enum SpawnerScriptsIndex //TODO: move it to a more generic place. Understand where does it fit
-    {
-        ENEMY_SPAWNER = 0,
-        DIE_SPAWNER = 1,
-        WEAPON_ITEM_SPAWNER = 2
-    }
-
     [SerializeField] int[] levelTargetScore;
-    [SerializeField] float _timeUntilTriggerNewLevelScene = 1f;
-    [SerializeField] float _timeUntilGeneratingNewLevelMap = 0.3f;
+    [SerializeField] float timeUntilTriggerNewLevelScene = 1f;
+    [SerializeField] float timeUntilGeneratingNewLevelMap = 0.3f;
+    [SerializeField] GameObject passedLevelScreen; //TODO: make nicer
 
-    private List<AbstractSpawnManager> _spawnerScripts;
+    private SpawnerManager spawnerManager;
+    private PlayerMovement playerMovement; //TODO: refactor name or split to another script
+    private WeaponManager weaponManager;
 
-    private MapManager _mapManagerScript;
-    private DiceRollManager _diceRollManagerScript;
-
-    public delegate void OnCleanupBeforeLevelUp();
-    public static OnCleanupBeforeLevelUp onCleanupBeforeLevelUp;
+    private WallSpawner wallSpawnerScript;
+    private DiceRollManager diceRollManagerScript;
 
     public delegate void OnUpdatingTargetScoreWhenLevelUp(int newTargetScore);
     public static OnUpdatingTargetScoreWhenLevelUp onUpdatingTargetScoreWhenLevelUp;
 
-    private int _currentLevel = 1;
+    private int currentLevel = 1;
 
 
     private void Start()
     {
         DiceRollManager.onDieRoll += CheckIfReachedTargetScore;
-        _mapManagerScript       = gameObject.GetComponent<MapManager>();
-        _diceRollManagerScript  = gameObject.GetComponent<DiceRollManager>();
-        InitializeSpawnerScripts();
-        FirstLevelInitializations();
+        GameObject spawnersHolder = GameObject.Find("SpawnersHolder");
+        wallSpawnerScript         = spawnersHolder.GetComponent<WallSpawner>();
+        diceRollManagerScript     = gameObject.GetComponent<DiceRollManager>();
+        spawnerManager            = gameObject.GetComponent<SpawnerManager>();
+        GameObject player         = GameObject.Find("Player");
+        playerMovement = player.GetComponent<PlayerMovement>();
+        weaponManager = player.GetComponent<WeaponManager>();
+
+        currentLevel = 1; //TODO: need to initialize this value to what is being chosen from the main menu
+        TransitionToNextLevel(); 
     }
 
-    private void InitializeSpawnerScripts()
+    void FinishedLevel()
     {
-        _spawnerScripts = new List<AbstractSpawnManager>();
-        _spawnerScripts.Add(gameObject.GetComponent<EnemySpawner>());
-        _spawnerScripts.Add(gameObject.GetComponent<DieSpawner>());
-        _spawnerScripts.Add(gameObject.GetComponent<WeaponItemSpawner>());
+        playerMovement.enabled = false;
+        spawnerManager.ChangeSpawningStatus(false);
+        spawnerManager.ClearPrefabsFromMap();
+        // Clear walls
+
+        
+        
+        passedLevelScreen.SetActive(true);
     }
+
+    public void TransitionToNextLevel()
+    {
+        passedLevelScreen.SetActive(false);
+        onUpdatingTargetScoreWhenLevelUp?.Invoke(GetLevelTargetScore()); //Listeners: TargetScoreUI
+        diceRollManagerScript.ZeroTotalDieScore();
+        // ~~~~~ Move player to a certain position. Maybe an entrance animation ~~~~~~~
+        GameObject player = GameObject.Find("Player");
+        player.transform.position = new Vector3(-3, -3, 0); //TODO: use a script (I need to create one)that will be in charge of moving the player
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        wallSpawnerScript.PrepareNewLevelMap(GetCurrentLevel()); //TODO: separating between removing the walls and creating new ones. 2 separate functions
+        spawnerManager.ChangeSpawningStatus(true);
+        weaponManager.DropWeapon();
+        playerMovement.enabled = true;        
+    }
+
+    IEnumerator PrepareNewLevelMapCoroutine()
+    {
+        yield return new WaitForSeconds(timeUntilGeneratingNewLevelMap); //TODO: need to change to a smarter check if the new level scene was already loaded
+        wallSpawnerScript.PrepareNewLevelMap(GetCurrentLevel());
+        spawnerManager.ChangeSpawningStatus(true);
+    }
+
+    private void CheckIfReachedTargetScore(int dieRollScore, int totalRollScore)
+    {
+        if(totalRollScore >= GetLevelTargetScore())
+        {
+            currentLevel++; // TODO: see how to make it nicer
+            FinishedLevel();
+        }
+    }
+
 
     void FirstLevelInitializations()
     {
-        _mapManagerScript.PrepareNewLevelMap(GetCurrentLevel());
+        wallSpawnerScript.PrepareNewLevelMap(GetCurrentLevel());
     }
 
     private int GetCurrentLevel()
     {
-        return _currentLevel;
+        return currentLevel;
     }
 
     public int GetLevelTargetScore()
@@ -62,30 +97,25 @@ public class LevelTransitionManager : MonoBehaviour
         return levelTargetScore[GetCurrentLevel() - 1];
     }
 
-    private void CheckIfReachedTargetScore(int dieRollScore, int totalRollScore)
+    /*private void CheckIfReachedTargetScore(int dieRollScore, int totalRollScore)
     {
         if(totalRollScore >= GetLevelTargetScore())
         {
             LevelUp();
         }
-    }
+    }*/
 
-    private void LevelUp()
+    /*private void LevelUp()
     {
-        ChangeSpawningStatus(false);
-        ClearPrefabsFromMap();
-        _currentLevel++;
+        spawnerManager.ChangeSpawningStatus(false);
+        spawnerManager.ClearPrefabsFromMap();
+        currentLevel++;
         StartCoroutine(DelayCoroutine());
-    }
-
-    private void ClearPrefabsFromMap()
-    {
-        onCleanupBeforeLevelUp?.Invoke(); //Listeners: AbstractSpawnerManager
     }
 
     IEnumerator DelayCoroutine()
     {
-        yield return new WaitForSeconds(_timeUntilTriggerNewLevelScene);
+        yield return new WaitForSeconds(timeUntilTriggerNewLevelScene);
         TransitionToNextLevel();
     }
 
@@ -94,21 +124,13 @@ public class LevelTransitionManager : MonoBehaviour
         onUpdatingTargetScoreWhenLevelUp?.Invoke(GetLevelTargetScore()); //Listeners: TargetScoreUI
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         StartCoroutine(PrepareNewLevelMapCoroutine());
-        _diceRollManagerScript.ZeroTotalDieScore();
+        diceRollManagerScript.ZeroTotalDieScore();
     }
 
     IEnumerator PrepareNewLevelMapCoroutine()
     {
-        yield return new WaitForSeconds(_timeUntilGeneratingNewLevelMap); //TODO: need to change to a smarter check if the new level scene was already loaded
-        _mapManagerScript.PrepareNewLevelMap(GetCurrentLevel());
-        ChangeSpawningStatus(true);
-    }
-
-    private void ChangeSpawningStatus(bool isSetToSpawning)
-    {
-        foreach(AbstractSpawnManager spawnerScript in _spawnerScripts)
-        {
-            spawnerScript.ChangeSpawningStatus(isSetToSpawning);
-        }
-    }
+        yield return new WaitForSeconds(timeUntilGeneratingNewLevelMap); //TODO: need to change to a smarter check if the new level scene was already loaded
+        wallSpawnerScript.PrepareNewLevelMap(GetCurrentLevel());
+        spawnerManager.ChangeSpawningStatus(true);
+    }*/
 }

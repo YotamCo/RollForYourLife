@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    GameObject gameManager;
-    MapManager mapManagerScript;
     Vector3 playerDircetion = Vector3.forward * 0;
+    private ValidPositionChecker validPositionChecker;
     
     void Start()
     {
-        gameManager = GameObject.Find("GameManager");
-        mapManagerScript = gameManager.GetComponent<MapManager>();
+        validPositionChecker = new ValidPositionChecker();
     }
 
     // Update is called once per frame
@@ -50,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
 
         transform.eulerAngles = playerDircetion;
 
-        if(mapManagerScript.IsWantedPositionOutOfBoundsOrWall(wantedPosition))
+        if(validPositionChecker.IsWantedPositionOutOfBoundsOrWall(wantedPosition))
         {
             
             transform.position = wantedPosition;

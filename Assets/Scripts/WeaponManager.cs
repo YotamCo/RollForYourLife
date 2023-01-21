@@ -58,10 +58,15 @@ public class WeaponManager : MonoBehaviour
 
         if(_currentInstantiatedWeapon.GetComponent<Weapon>().IsTimeToDropWeapon())
         {
-            ChangeWeapon((int)WeaponEnum.FIST);
+            DropWeapon();
         }
     }
 
+    public void DropWeapon()
+    {
+        ChangeWeapon((int)WeaponEnum.FIST);
+    }
+    
     private void WeaponItemPickedUp(GameObject weaponItem)
     {
         ChangeWeapon(WeaponIndexFactory(weaponItem.tag));
@@ -81,12 +86,10 @@ public class WeaponManager : MonoBehaviour
     {
         if(weaponTag == "SwordWeaponItem")
         {
-            Debug.Log("Picked a sword");
             return (int)WeaponEnum.SWORD;
         }
         if(weaponTag == "GunWeaponItem")
         {
-            Debug.Log("Picked a gun");
             return (int)WeaponEnum.GUN;
         }
         return (int)WeaponEnum.FIST; //Should not get here

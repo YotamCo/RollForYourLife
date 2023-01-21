@@ -295,10 +295,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57dc0caa50fd14c41a6650dc519bca74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _deathEffectPrefab: {fileID: 2155049618853263384, guid: 94c509bb1845e4345b315d1779781c89, type: 3}
+  deathEffectPrefab: {fileID: 2155049618853263384, guid: 94c509bb1845e4345b315d1779781c89, type: 3}
+  movementSpeed: 5
   movementEverySecs: 0.5
-  movingSpeed: 5
-  _timeUntilDefinedAsStuck: 1
 --- !u!1 &7430462237429939513
 GameObject:
   m_ObjectHideFlags: 0

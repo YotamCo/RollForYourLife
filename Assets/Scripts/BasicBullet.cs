@@ -4,35 +4,39 @@ using UnityEngine;
 
 public class BasicBullet : MonoBehaviour
 {
+    enum MuzzleDirection{
+        RIGHT = 0,
+        UP = 90,
+        LEFT = 180,
+        DOWN = 270
+    }
+
     [SerializeField] private float _bulletSpeed = 0.15f; // move every seconds
     private float _tempMoveSpeed;
 
     private Vector3 _bulletDireccion;
     private Vector3 _bulletEulerAngles;
 
-    GameObject gameManager;
-    MapManager mapManagerScript;
+    ValidPositionChecker validPositionChecker;
 
-    // Start is called before the first frame update
     void Start()
     {
         _tempMoveSpeed = 0;
-
-        gameManager = GameObject.Find("GameManager");
-        mapManagerScript = gameManager.GetComponent<MapManager>();
+        validPositionChecker = new ValidPositionChecker();
     }
 
-    // Update is called once per frame
     void Update()
     {
         gameObject.transform.eulerAngles = _bulletEulerAngles;
+        //TODO - Refactoring
+        // Might need to change it so different fps will run the same
         _tempMoveSpeed -= Time.deltaTime;
         if (_tempMoveSpeed < 0)
         {
             transform.position += _bulletDireccion;
             _tempMoveSpeed = _bulletSpeed;
         }
-        if(mapManagerScript.IsInMapBounds(gameObject.transform.position))
+        if(validPositionChecker.IsInMapBoundaries(gameObject.transform.position))
         {           
             Destroy(gameObject, 2); //Destroying when the bullet will already be out of bounds
         }
@@ -44,26 +48,25 @@ public class BasicBullet : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
     }
 
     public void SetBulletDirection(Vector3 muzzleDirection)
     {
         _bulletEulerAngles = muzzleDirection;
         
-        if (muzzleDirection.z == 0)
+        if (muzzleDirection.z == (float)MuzzleDirection.RIGHT)
         {
             _bulletDireccion = new Vector3(1, 0, 0);
         }
-        else if(muzzleDirection.z == 90)
+        else if(muzzleDirection.z == (float)MuzzleDirection.UP)
         {
             _bulletDireccion = new Vector3(0, 1, 0);
         }
-        else if(muzzleDirection.z == 180)
+        else if(muzzleDirection.z == (float)MuzzleDirection.LEFT)
         {
             _bulletDireccion = new Vector3(-1, 0, 0);
         }
-        else if(muzzleDirection.z == 270)
+        else if(muzzleDirection.z == (float)MuzzleDirection.DOWN)
         {
             _bulletDireccion = new Vector3(0, -1, 0);
         }

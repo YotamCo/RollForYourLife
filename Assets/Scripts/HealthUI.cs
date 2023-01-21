@@ -14,7 +14,7 @@ public class HealthUI : MonoBehaviour
     {
         HealthController.onPlayerTakeDamage += LowerHealthUI;
         GameObject player = GameObject.Find("Player");
-        Debug.Assert(player != null);
+        Debug.Assert(player != null, "Couldn't find player");
         _healthControllerScript = player.GetComponent<HealthController>();
         if(_healthControllerScript == null)
         {

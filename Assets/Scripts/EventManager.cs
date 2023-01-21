@@ -16,8 +16,7 @@ public class EventManager : MonoBehaviour
     private void InitializeEvents()
     {
         _dieRollEvents = new List<AbstractEvent>();
-        //TODO: implement later
-        // Go over the gameobject's children and get their abstract event script and add it an event list
+
         for(int i = 0; i < transform.childCount; i++)
         {
              GameObject dieRollEventObject = gameObject.transform.GetChild(i).gameObject;
